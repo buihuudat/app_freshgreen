@@ -37,8 +37,6 @@ const Checkout = (props: Props) => {
     const secretClient = async () => {
       try {
         const data = await payActions.payment(payData.amount);
-
-        await dataStorage.setItem('client_secret', data.client_secret);
         setSecretClient(data);
       } catch (error) {
         return false;
@@ -69,7 +67,7 @@ const Checkout = (props: Props) => {
     if (error) {
       // Alert.alert(`Error code: ${error.code}`, error.message);
     } else {
-      await dispatch(orderActions.createOrder({userId: payData.userId, order}));
+      dispatch(orderActions.createOrder({userId: payData.userId, order}));
       Alert.alert('Hoàn tất', 'Cảm ơn bạn đã mua sản phẩm!', [
         {
           text: 'OK',
