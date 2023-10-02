@@ -5,7 +5,7 @@ import {
   useWindowDimensions,
   ScrollView,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Header, Icon} from '@rneui/themed';
 import {mainColor} from '../constants/colors';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -24,11 +24,12 @@ export default function NewsDetails({route, navigation}: Props) {
   const {width} = useWindowDimensions();
   const dispatch = useAppDispatch();
 
-  const isLiked = newsList.some(news => news.likeCount === user?._id);
+  const checkLike = news.likeCount.some(like => like === user?._id!);
+  const [liked, setLiked] = useState(checkLike);
 
   useEffect(() => {
     const updateLike = setTimeout(() => {
-      dispatch(newsActions.updateViewCount(news._id!));
+      // dispatch(newsActions.updateViewCount(news._id!));
     }, 10000);
 
     return () => {
@@ -36,7 +37,12 @@ export default function NewsDetails({route, navigation}: Props) {
     };
   }, []);
 
-  const handleLike = () => {};
+  const handleLike = () => {
+    dispatch(
+      newsActions.updateLikeCount({newsId: news._id!, userId: user?._id!}),
+    );
+    setLiked(!liked);
+  };
 
   return (
     <View style={styles.container}>
@@ -56,13 +62,11 @@ export default function NewsDetails({route, navigation}: Props) {
           </View>
         }
         rightComponent={
-          <View style={styles.viewCount}>
-            <Text style={styles.textViewCount}>{news.likeCount || 0}</Text>
-            <Icon
-              name={`thumb-up${isLiked ? '' : '-off-alt'}`}
-              color={mainColor}
-            />
-          </View>
+          <Icon
+            onPress={handleLike}
+            name={`thumb-up${liked ? '' : '-off-alt'}`}
+            color={mainColor}
+          />
         }
       />
       <ScrollView style={styles.content}>

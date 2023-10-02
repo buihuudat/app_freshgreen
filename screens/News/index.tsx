@@ -1,26 +1,24 @@
 import {View, Text, FlatList, RefreshControl} from 'react-native';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {Header, Icon} from '@rneui/themed';
 import {mainColor} from '../../constants/colors';
 import moment from 'moment';
-import 'moment/locale/vi';
 import {styles} from './styles';
 import {ScrollView} from 'react-native';
 import NewsItem from './components/NewsItem';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../routes';
 import {newsActions} from '../../actions/newsActions';
+import _ from 'lodash';
+import {NewsType} from '../../types/newsType';
 
 export default function News() {
+  const newsList = useAppSelector(state => state.news.newsList);
   const [tagSelected, setTagSelected] = useState<Array<string>>([]);
   const [refreshing, setRefreshing] = useState(false);
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [newsFiltered, setNewsFiltered] = useState<Array<NewsType>>(newsList);
+
   const dispatch = useAppDispatch();
 
-  const newsList = useAppSelector(state => state.news.newsList);
   const allTags = newsList.flatMap(data => data.tags);
   const tags = Array.from(new Set(allTags.map(tag => tag.name)));
 
@@ -41,13 +39,14 @@ export default function News() {
     }
   };
 
-  const newsFiltered = useMemo(() => {
-    return newsList.filter(news =>
-      news.tags.map(tag => tagSelected.includes(tag.name)),
-    );
-  }, [tagSelected]);
-
-  console.log(newsFiltered.length, newsList.length);
+  useEffect(() => {
+    const data = tagSelected.length
+      ? newsList.filter(item =>
+          item.tags.some(tag => tagSelected.includes(tag.name)),
+        )
+      : newsList;
+    setNewsFiltered(data);
+  }, [tagSelected, newsList]);
 
   return (
     <View style={styles.container}>

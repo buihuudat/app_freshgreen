@@ -15,8 +15,8 @@ export interface NewsType {
   tags: TagType[];
   author: Auth;
   content: string;
-  viewCount?: number;
-  likeCount?: number;
+  viewCount: number;
+  likeCount: Array<string>;
   createdAt?: Date;
   updatedAt?: Date;
 }

@@ -53,7 +53,40 @@ export const newsSlice = createSlice({
         });
       })
       .addCase(newsActions.updateViewCount.fulfilled, (state, action) => {
-        if (action.payload) return state;
+        const newsListUpdated = state.newsList.map(news => {
+          if (news._id === action.meta.arg) {
+            return {
+              ...news,
+              viewCount: news.viewCount! + 1,
+            };
+          }
+          return news;
+        });
+        state.newsList = newsListUpdated;
+      })
+      .addCase(newsActions.updateLikeCount.fulfilled, (state, action) => {
+        const {newsId, userId} = action.meta.arg;
+        const index = state.newsList.findIndex(news => news._id === newsId);
+
+        if (index !== -1) {
+          const newsListUpdated = [...state.newsList];
+          const newsToUpdate = {...newsListUpdated[index]};
+
+          if (!newsToUpdate.likeCount) {
+            newsToUpdate.likeCount = [];
+          }
+
+          if (newsToUpdate.likeCount.includes(userId)) {
+            newsToUpdate.likeCount = newsToUpdate.likeCount.filter(
+              l => l !== userId,
+            );
+          } else {
+            newsToUpdate.likeCount.push(userId);
+          }
+
+          newsListUpdated[index] = newsToUpdate;
+          state.newsList = newsListUpdated;
+        }
       })
       .addCase(newsActions.delete.fulfilled, (state, action) => {
         const newsIndex = state.newsList.findIndex(

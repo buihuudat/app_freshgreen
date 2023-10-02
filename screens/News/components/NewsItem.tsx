@@ -50,21 +50,21 @@ export default function NewsItem(news: NewsType) {
           </View>
           <View style={styles.newsInfo}>
             <Text style={{color: mainColor}}>Lượt thích:</Text>
-            <Text style={styles.newsInfoText}>{news.viewCount}</Text>
+            <Text style={styles.newsInfoText}>{news.likeCount.length}</Text>
             <Text style={{fontStyle: 'italic'}}>
               - {moment(news.createdAt).format('l')}
             </Text>
           </View>
         </View>
 
-        <View>
+        {/* <View>
           <FlatList
             keyExtractor={item => item._id!}
             data={news.tags}
             horizontal={true}
             renderItem={({item}) => <Text>{item.name}</Text>}
           />
-        </View>
+        </View> */}
       </View>
     </View>
   );

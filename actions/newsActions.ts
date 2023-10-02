@@ -63,7 +63,7 @@ export const newsActions = {
     },
   ),
   updateLikeCount: createAsyncThunk<any, {newsId: string; userId: string}>(
-    'news/update/viewCount',
+    'news/update/likeCount',
     async ({newsId, userId}) => {
       try {
         await newsApi.updateLikeCount({newsId, userId});
