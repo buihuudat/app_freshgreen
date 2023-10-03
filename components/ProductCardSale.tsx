@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, ImageBackground} from 'react-native';
+import {View, Text, StyleSheet, ImageBackground, Alert} from 'react-native';
 import React, {memo, useEffect, useState} from 'react';
 import {ProductType} from '../types/productType';
 import {Button, Card, Icon} from '@rneui/themed';
@@ -6,6 +6,9 @@ import {Rating} from 'react-native-ratings';
 import {moneyFormat} from '../utils/handlers/moneyFormat';
 import {mainColor} from '../constants/colors';
 import moment from 'moment';
+import {useAppDispatch, useAppSelector} from '../redux/hooks';
+import {RootState} from '../redux/store';
+import {cartActions} from '../actions/cartActions';
 
 interface Props {
   product: ProductType;
@@ -20,6 +23,19 @@ const ProductCardSale = memo((product: ProductType) => {
     m: ms * 60,
     s: ms,
   });
+
+  const user = useAppSelector((state: RootState) => state.user.user);
+  const dispatch = useAppDispatch();
+
+  const handleAddProduct = () => {
+    if (!user) return Alert.alert('⚠️', 'Bạn chưa đăng nhập');
+    dispatch(
+      cartActions.addProductToCart({
+        userId: user?._id!,
+        product: {...product, count: 1},
+      }),
+    );
+  };
 
   // var countDownDate = moment('10-26-2023 +0000', 'MM-DD-YYYY Z').valueOf();
 
@@ -76,7 +92,7 @@ const ProductCardSale = memo((product: ProductType) => {
 
             <Text style={styles.price}>{moneyFormat(product.lastPrice)}</Text>
 
-            <Button color={mainColor}>
+            <Button color={mainColor} onPress={handleAddProduct}>
               Thêm vào giỏ hàng{' '}
               <Icon name="add-shopping-cart" color={'white'} />
             </Button>

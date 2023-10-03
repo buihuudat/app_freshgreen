@@ -39,7 +39,7 @@ export const dataAction: Array<DataActionProps> = [
   {
     icon: 'support-agent',
     title: 'Liên hệ',
-    path: 'Supports',
+    path: 'Contact',
     active: true,
   },
   {

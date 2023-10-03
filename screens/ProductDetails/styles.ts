@@ -165,16 +165,9 @@ export const styles = StyleSheet.create({
     display: 'flex',
     gap: 1,
   },
-  actionReviews: {
+  iconReviews: {
     padding: 15,
     borderRadius: 50,
-    backgroundColor: '#6CABE7',
-  },
-
-  actionFavorite: {
-    padding: 15,
-    borderRadius: 50,
-    backgroundColor: 'pink',
   },
 
   actionAddCart: {

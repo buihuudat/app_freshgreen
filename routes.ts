@@ -19,7 +19,8 @@ export type RootStackParamList = {
   };
   Categories: undefined;
   FAQ: undefined;
-  Support: undefined;
+  Settings: undefined;
+  Contact: undefined;
   NewsDetails: {news: NewsType};
 
   Spending: {orders: Array<OrderItemType>};

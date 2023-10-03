@@ -35,7 +35,7 @@ export default function Splash() {
       navigation.navigate('HomeTab');
     };
 
-    fetchAppData();
+    fetchAppData().catch(e => console.log(e));
   }, []);
 
   return (

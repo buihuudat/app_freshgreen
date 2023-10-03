@@ -19,7 +19,6 @@ import Message from './screens/Message';
 import Categories from './screens/Categories';
 import {Platform} from 'react-native';
 import FAQ from './screens/FAQ';
-import Support from './screens/Support';
 import Splash from './screens/Splash';
 import ProductReviews from './screens/ProductReviews';
 import StoreDetails from './screens/StoreDetails';
@@ -30,6 +29,8 @@ import History from './screens/History';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import NewsDetails from './screens/NewsDetails';
 import 'moment/locale/vi';
+import Contact from './screens/Contact';
+import Settings from './screens/Settings';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -106,7 +107,8 @@ export default function App() {
               <RootStack.Screen name="Notification" component={Notification} />
               <RootStack.Screen name="Message" component={Message} />
               <RootStack.Screen name="FAQ" component={FAQ} />
-              <RootStack.Screen name="Support" component={Support} />
+              <RootStack.Screen name="Contact" component={Contact} />
+              <RootStack.Screen name="Settings" component={Settings} />
 
               <RootStack.Screen name="Cart" component={Cart} />
               <RootStack.Screen name="History" component={History} />

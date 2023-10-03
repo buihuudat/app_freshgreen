@@ -6,11 +6,11 @@ import {
   useWindowDimensions,
   ActivityIndicator,
 } from 'react-native';
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../routes';
 import {styles} from './styles';
-import {Badge, Header, Icon} from '@rneui/themed';
+import {Header, Icon} from '@rneui/themed';
 import {mainColor} from '../../constants/colors';
 import Swiper from 'react-native-swiper';
 import {Rating} from 'react-native-ratings';
@@ -23,10 +23,8 @@ import {productActions} from '../../actions/productActions';
 import {ProductType} from '../../types/productType';
 import {RefreshControl} from 'react-native';
 import {RootState} from '../../redux/store';
-import {CommentType} from '../../types/commentType';
-import {favoriteActions} from '../../actions/favoriteActions';
-import {cartActions} from '../../actions/cartActions';
 import CartIcon from '../../components/CartIcon';
+import ProductActions from './components/ProductActions';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ProductDetail'>;
 
@@ -34,9 +32,6 @@ const ProductDetails = memo(({route, navigation}: Props) => {
   const {product: ProductParams} = route.params;
   const {width} = useWindowDimensions();
   const dispatch = useAppDispatch();
-  const favorites = useAppSelector(
-    (state: RootState) => state.favorite.favoriteProducts,
-  );
   const user = useAppSelector((state: RootState) => state.user.user);
 
   const [product, setProduct] = useState<ProductType>(ProductParams);
@@ -46,20 +41,18 @@ const ProductDetails = memo(({route, navigation}: Props) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchProduct = useCallback(async () => {
+    setRefreshing(true);
     await dispatch(productActions.get(product._id!))
       .unwrap()
-      .then((data: ProductType) => setProduct(data));
+      .then((data: ProductType) => {
+        setProduct(data);
+        setRefreshing(false);
+      });
   }, []);
 
   useEffect(() => {
     fetchProduct().then(() => setIsLoading(false));
   }, [ProductParams]);
-
-  const isFavorite = favorites.find(favorite => favorite._id === product._id);
-  const isArrayValid = useMemo(
-    () => product.comments?.every(comment => typeof comment !== 'string'),
-    [product.comments],
-  );
 
   const shopImage = product.shop?.user?.avatar
     ? {uri: product.shop?.user.avatar}
@@ -83,25 +76,6 @@ const ProductDetails = memo(({route, navigation}: Props) => {
   const handleViewShop = () => {
     navigation.push('StoreDetails', {storeId: product.shop?._id!});
   };
-  const handleReviews = () => {
-    navigation.navigate('ProductReviews', {
-      comments: product.comments as Array<CommentType>,
-      productName: product.title,
-      productId: product._id!,
-      averageStarRating: product.averageStarRating,
-    });
-  };
-  const handleFavorite = async () => {
-    dispatch(favoriteActions.update({userId: user?._id!, product}));
-  };
-  const handleAddProduct = () => {
-    dispatch(
-      cartActions.addProductToCart({
-        userId: user?._id!,
-        product: {...product, count: productCount},
-      }),
-    );
-  };
 
   return (
     <View style={styles.container}>
@@ -118,7 +92,7 @@ const ProductDetails = memo(({route, navigation}: Props) => {
         centerComponent={
           <Text style={styles.headerTitle}>{product.category}</Text>
         }
-        rightComponent={<CartIcon />}
+        rightComponent={user ? <CartIcon /> : <></>}
       />
 
       {isLoading ? (
@@ -129,6 +103,7 @@ const ProductDetails = memo(({route, navigation}: Props) => {
             style={{flex: 1}}
             refreshControl={
               <RefreshControl
+                tintColor={mainColor}
                 refreshing={refreshing}
                 onRefresh={fetchProduct}
               />
@@ -228,37 +203,11 @@ const ProductDetails = memo(({route, navigation}: Props) => {
             </View>
           </ScrollView>
 
-          <View style={styles.productActions}>
-            <View style={styles.actionsContent}>
-              <View>
-                <Icon
-                  onPress={handleReviews}
-                  style={styles.actionReviews}
-                  color={'white'}
-                  name="reviews"
-                  disabled={!isArrayValid}
-                />
-                {product.comments.length > 0 && (
-                  <Badge
-                    status="primary"
-                    value={product.comments.length}
-                    containerStyle={{position: 'absolute', top: 5, left: 45}}
-                  />
-                )}
-              </View>
-              <Icon
-                onPress={handleFavorite}
-                style={styles.actionFavorite}
-                color={'white'}
-                name={`favorite${!isFavorite ? '-outline' : ''}`}
-              />
-              <TouchableOpacity
-                onPress={handleAddProduct}
-                style={styles.actionAddCart}>
-                <Text style={styles.actionText}>Thêm vào giỏ hàng</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <ProductActions
+            product={product}
+            productCount={productCount}
+            user={user!}
+          />
         </View>
       )}
     </View>

@@ -4,6 +4,7 @@ import {
   StyleSheet,
   useWindowDimensions,
   ScrollView,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Header, Icon} from '@rneui/themed';
@@ -29,7 +30,7 @@ export default function NewsDetails({route, navigation}: Props) {
 
   useEffect(() => {
     const updateLike = setTimeout(() => {
-      // dispatch(newsActions.updateViewCount(news._id!));
+      dispatch(newsActions.updateViewCount(news._id!));
     }, 10000);
 
     return () => {
@@ -38,6 +39,7 @@ export default function NewsDetails({route, navigation}: Props) {
   }, []);
 
   const handleLike = () => {
+    if (!user) return Alert.alert('⚠️', 'Bạn chưa đăng nhập');
     dispatch(
       newsActions.updateLikeCount({newsId: news._id!, userId: user?._id!}),
     );

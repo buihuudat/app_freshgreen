@@ -5,7 +5,7 @@ import {dataStorage} from '../handlers/dataStorage';
 
 // let IP = '192.168.0.206'; // ot
 // let IP = '10.68.1.215'; //ticos
-let IP = '192.168.1.2';
+let IP = '192.168.1.7';
 
 const PORT = 5000;
 const baseURL = `http://${IP}:${PORT}/api/v1`;
@@ -36,11 +36,14 @@ axiosClient.interceptors.response.use(
     // if (response && response.data) return response.data;
     return response;
   },
-  (err: any) => {
-    if (!err.response) {
-      return Alert.alert('error', err);
+  error => {
+    if (!error.response) {
+      return Alert.alert(
+        'Lỗi',
+        'Kết nối không thành công. Vui lòng kiểm tra kết nối mạng của bạn.',
+      );
     }
-    throw err.response;
+    throw error.response;
   },
 );
 

@@ -2027,6 +2027,11 @@
   dependencies:
     "@babel/types" "^7.20.7"
 
+"@types/geojson@^7946.0.10":
+  version "7946.0.11"
+  resolved "https://registry.npmjs.org/@types/geojson/-/geojson-7946.0.11.tgz"
+  integrity sha512-L7A0AINMXQpVwxHJ4jxD6/XjZ4NDufaRlUJHjNIFKYUFBH1SvOW+neaqb0VTRSLW5suSrSu19ObFEFnfNcr+qg==
+
 "@types/graceful-fs@^4.1.3":
   version "4.1.7"
   resolved "https://registry.npmjs.org/@types/graceful-fs/-/graceful-fs-4.1.7.tgz"
@@ -6018,6 +6023,13 @@ react-native-linear-gradient@^2.8.3:
   resolved "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz"
   integrity sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA==
 
+react-native-maps@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.npmjs.org/react-native-maps/-/react-native-maps-1.7.1.tgz"
+  integrity sha512-CHVLzL+Q2jiUGgbt4/vosxVI1SukWyaLGjD62VLgR/wZpnH4Umi9ql1bmKDPWcfj2C1QZwMU0Yc7rXTbvZUIiw==
+  dependencies:
+    "@types/geojson" "^7946.0.10"
+
 react-native-pager-view@*, react-native-pager-view@^6.2.1, "react-native-pager-view@>= 4.0.0":
   version "6.2.1"
   resolved "https://registry.npmjs.org/react-native-pager-view/-/react-native-pager-view-6.2.1.tgz"
@@ -6104,7 +6116,7 @@ react-native-vector-icons@*, "react-native-vector-icons@>= 6.0.0", react-native-
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native@*, react-native@^*, "react-native@^0.0.0-0 || 0.60 - 0.72 || 1000.0.0", react-native@>=0.57, react-native@>=0.59, react-native@0.72.5:
+react-native@*, react-native@^*, "react-native@^0.0.0-0 || 0.60 - 0.72 || 1000.0.0", "react-native@>= 0.64.3", react-native@>=0.57, react-native@>=0.59, react-native@0.72.5:
   version "0.72.5"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.72.5.tgz"
   integrity sha512-oIewslu5DBwOmo7x5rdzZlZXCqDIna0R4dUwVpfmVteORYLr4yaZo5wQnMeR+H7x54GaMhmgeqp0ZpULtulJFg==
@@ -6180,7 +6192,7 @@ react-test-renderer@18.2.0:
     react-shallow-renderer "^16.15.0"
     scheduler "^0.23.0"
 
-react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.9.0 || ^17.0.0 || ^18", react@^18.2.0, react@>=16, react@>=16.0, react@>=16.3.0, react@>=16.8, react@>=17.0.0, react@18.2.0:
+react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.9.0 || ^17.0.0 || ^18", react@^18.2.0, "react@>= 17.0.1", react@>=16, react@>=16.0, react@>=16.3.0, react@>=16.8, react@>=17.0.0, react@18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==

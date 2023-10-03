@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {memo, useState} from 'react';
 import {Card, Icon} from '@rneui/themed';
 import {ProductType} from '../types/productType';
@@ -36,9 +36,11 @@ const ProductCard = memo((props: Props) => {
   };
 
   const handleFavorite = () => {
+    if (!user) return Alert.alert('⚠️', 'Bạn chưa đăng nhập');
     dispatch(favoriteActions.update({userId: user?._id!, product}));
   };
   const handleAddProduct = () => {
+    if (!user) return Alert.alert('⚠️', 'Bạn chưa đăng nhập');
     dispatch(
       cartActions.addProductToCart({
         userId: user?._id!,

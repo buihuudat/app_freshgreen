@@ -17,7 +17,7 @@ const StoreItem = memo((props: Props) => {
 
   const storeImage = store.image ? {uri: store.image} : Store;
   const handleViewStore = () => {
-    console.log(123);
+    navigation.navigate('StoreDetails', {storeId: store._id!});
   };
 
   return (
