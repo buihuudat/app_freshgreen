@@ -10,3 +10,4 @@ export const UserImage = require('../resources/images/user.png');
 export const SplashImage = require('../resources/images/splash2.png');
 export const Delivery = require('../resources/images/delivery.png');
 export const Store = require('../resources/images/storeImage.png');
+export const Notification = require('../resources/images/notification.png');

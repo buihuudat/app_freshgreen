@@ -8,11 +8,16 @@ import Account from '../screens/Account';
 import Store from '../screens/Store';
 import News from '../screens/News';
 import Notification from '../screens/Notification';
+import {useAppSelector} from '../redux/hooks';
+import {RootState} from '../redux/store';
 
 const Tab = createMaterialBottomTabNavigator();
 const iconSize = 28;
 
 export default function BottomTabs() {
+  const notificationCount = useAppSelector(
+    (state: RootState) => state.notification.notifications,
+  ).length;
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -70,7 +75,7 @@ export default function BottomTabs() {
         name="Notifications"
         component={Notification}
         options={{
-          tabBarBadge: 1,
+          tabBarBadge: notificationCount > 0 ? notificationCount : undefined,
           tabBarLabel: 'Thông báo',
           tabBarIcon: ({color}) => (
             <Icon name="notifications" color={color} size={iconSize} />
