@@ -52,6 +52,10 @@ const ProductDetails = memo(({route, navigation}: Props) => {
 
   useEffect(() => {
     fetchProduct().then(() => setIsLoading(false));
+    const updateViewProduct = setTimeout(() => {
+      dispatch(productActions.updateProductView(product._id!));
+    }, 10000);
+    return () => clearTimeout(updateViewProduct);
   }, [ProductParams]);
 
   const shopImage = product.shop?.user?.avatar
@@ -186,7 +190,7 @@ const ProductDetails = memo(({route, navigation}: Props) => {
                   ))}
                 </View>
                 <HTML
-                  contentWidth={width}
+                  contentWidth={width ?? 100}
                   source={{
                     html: showFullDescription
                       ? product.description

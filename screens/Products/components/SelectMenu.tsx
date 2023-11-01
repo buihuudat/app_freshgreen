@@ -1,7 +1,9 @@
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import React, {memo} from 'react';
 import {Picker} from '@react-native-picker/picker';
 import {ItemOptions, Price, Time} from '../../../types/SelectType';
+import {Icon} from '@rneui/themed';
+import {mainColor} from '../../../constants/colors';
 
 const time: Array<ItemOptions> = [
   {
@@ -38,6 +40,8 @@ interface Props {
   priceOptions: string;
   setTimeOptions: (timeOptions: string) => void;
   setpriceOptions: (priceOptions: string) => void;
+  changeView: boolean;
+  setChangeView: (changeView: boolean) => void;
 }
 export const SelectMenu = memo((props: Props) => {
   const {
@@ -45,6 +49,8 @@ export const SelectMenu = memo((props: Props) => {
     priceOptions = price[0],
     setTimeOptions,
     setpriceOptions,
+    changeView,
+    setChangeView,
   } = props;
   return (
     <View style={styles.container}>
@@ -74,6 +80,13 @@ export const SelectMenu = memo((props: Props) => {
           ))}
         </Picker>
       </View>
+      <TouchableOpacity onPress={() => setChangeView(!changeView)}>
+        {props.changeView ? (
+          <Icon name="grid-view" color={mainColor} />
+        ) : (
+          <Icon name="view-list" color={mainColor} />
+        )}
+      </TouchableOpacity>
     </View>
   );
 });
@@ -83,9 +96,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 5,
   },
 
   optionItem: {
-    width: '50%',
+    width: '45%',
   },
 });

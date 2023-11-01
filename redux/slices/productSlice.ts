@@ -10,6 +10,9 @@ import {
 interface InitialStateProps {
   products: Array<ProductType>;
   product: ProductType;
+  popular: Array<ProductType>;
+  productsView: Array<ProductType>;
+  bestSeller: Array<ProductType>;
   shopProducts: {
     products: ProductType[];
     totalProducts: number;
@@ -21,11 +24,15 @@ interface InitialStateProps {
     data?: ProductType;
     open: boolean;
   };
+  category: string | null;
 }
 
 const initialState: InitialStateProps = {
   products: [],
   product: InitialProduct,
+  popular: [],
+  productsView: [],
+  bestSeller: [],
   shopProducts: {products: [], totalProducts: 0},
   totalProducts: 0,
   loading: false,
@@ -35,6 +42,7 @@ const initialState: InitialStateProps = {
     data: undefined,
     open: false,
   },
+  category: null,
 };
 
 export const productSlice = createSlice({
@@ -44,9 +52,8 @@ export const productSlice = createSlice({
     setProductModal: (state, action) => {
       state.modal = action.payload;
     },
-    setProducts: (state, action) => {
-      state.products = action.payload.products;
-      state.totalProducts = action.payload.totalProducts;
+    setCategory: (state, action) => {
+      state.category = action.payload;
     },
   },
 
@@ -62,25 +69,28 @@ export const productSlice = createSlice({
         state.product = action.payload;
         state.productLoading = false;
       })
-      .addCase(productActions.create.fulfilled, (state, action) => {
-        state.products.push(action.payload);
+      .addCase(productActions.popular.fulfilled, (state, action) => {
+        state.popular = action.payload;
       })
-      .addCase(productActions.update.fulfilled, (state, action) => {
-        const index = state.products.findIndex(
-          product => product._id === action.payload._id,
-        );
-        if (index !== 1) {
-          state.products[index] = action.payload;
-        }
+      .addCase(productActions.bestSeller.fulfilled, (state, action) => {
+        state.bestSeller = action.payload;
       })
-      .addCase(productActions.delete.fulfilled, (state, action) => {
-        const index = state.products.findIndex(
-          product => product._id === action.meta.arg._id,
-        );
-        state.products.splice(index, 1);
+      .addCase(productActions.getProductsView.fulfilled, (state, action) => {
+        state.productsView = action.payload;
       })
       .addCase(productActions.getShopProducts.fulfilled, (state, action) => {
         state.shopProducts = action.payload;
+      })
+      .addCase(productActions.updateProductView.fulfilled, (state, action) => {
+        if (!action.payload) return;
+        const indexProduct = state.products.findIndex(
+          product => product._id === action.meta.arg,
+        );
+        const currentProduct = state.products[indexProduct];
+        state.products[indexProduct] = {
+          ...currentProduct,
+          views: currentProduct.views + 1,
+        };
       })
       .addMatcher<PendingAction>(
         action => action.type.endsWith('/pending'),
@@ -99,5 +109,5 @@ export const productSlice = createSlice({
   },
 });
 
-export const {setProducts, setProductModal} = productSlice.actions;
+export const {setProductModal, setCategory} = productSlice.actions;
 export default productSlice.reducer;

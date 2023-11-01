@@ -31,15 +31,6 @@ export const tagSlice = createSlice({
       .addCase(tagActions.get.fulfilled, (state, action) => {
         state.tag = action.payload;
       })
-      .addCase(tagActions.create.fulfilled, (state, action) => {
-        state.tags.push(action.payload);
-      })
-      .addCase(tagActions.delete.fulfilled, (state, action) => {
-        const index = state.tags.findIndex(
-          tag => tag._id === action.meta.arg._id,
-        );
-        state.tags.splice(index, 1);
-      })
       .addMatcher<PendingAction>(
         action => action.type.endsWith('/pending'),
         state => {

@@ -29,39 +29,4 @@ export const voucherActions = {
       throw error;
     }
   }),
-  create: createAsyncThunk(
-    'voucher/create',
-    async (data: VoucherActionsType, thunkAPI) => {
-      try {
-        const res = await voucherApi.create(data);
-        return res.data;
-      } catch (error: any) {
-        if (error.data) return thunkAPI.rejectWithValue(error.data);
-        throw error;
-      }
-    },
-  ),
-  update: createAsyncThunk(
-    'voucher/update',
-    async (data: VoucherActionsType, thunkAPI) => {
-      try {
-        const res = await voucherApi.update(data);
-        return res.data;
-      } catch (error: any) {
-        if (error.data) return thunkAPI.rejectWithValue(error.data);
-        throw error;
-      }
-    },
-  ),
-  delete: createAsyncThunk(
-    'voucher/delete',
-    async (data: VoucherActionsType) => {
-      try {
-        await voucherApi.delete(data);
-        return true;
-      } catch (error: any) {
-        throw error;
-      }
-    },
-  ),
 };

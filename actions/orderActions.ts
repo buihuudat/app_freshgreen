@@ -1,8 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {orderApi} from '../utils/api/orderApi';
 import {OrderItemType, OrderStatus, SubmitProps} from '../types/orderType';
-import {dataStorage} from '../utils/handlers/dataStorage';
-import {Alert} from 'react-native';
+import Toast from 'react-native-toast-message';
 
 export const orderActions = {
   getOrders: createAsyncThunk('/order/gets', async (userId: string) => {
@@ -20,10 +19,10 @@ export const orderActions = {
     async ({userId, order}) => {
       try {
         const res = await orderApi.createOrder(userId, order);
-        Alert.alert('Đơn hàng đã được đặt');
+        Toast.show({type: 'success', text1: 'Đơn hàng đã được đặt'});
         return res.data;
       } catch (error) {
-        Alert.alert('Đặt hàng thất bại');
+        Toast.show({type: 'error', text1: 'Đặt hàng thất bại'});
         throw error;
       }
     },
@@ -41,9 +40,12 @@ export const orderActions = {
           status === OrderStatus.done ? OrderStatus.done : OrderStatus.refuse,
         message,
       });
-      Alert.alert(
-        `${status === OrderStatus.done ? 'Cảm ơn bạn' : 'Đã Từ chối đơn hàng'}`,
-      );
+      Toast.show({
+        type: 'success',
+        text1: `${
+          status === OrderStatus.done ? 'Cảm ơn bạn' : 'Đã Từ chối đơn hàng'
+        }`,
+      });
       return res.data;
     } catch (error) {
       throw error;

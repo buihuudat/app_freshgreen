@@ -26,6 +26,8 @@ export const styles = StyleSheet.create({
 
   productList: {
     flexGrow: 1,
-    paddingHorizontal: 20,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    padding: 10,
   },
 });

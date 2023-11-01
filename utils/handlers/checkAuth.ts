@@ -8,6 +8,7 @@ export const checkAuth = async (dispatch: any) => {
   const user = await dataStorage.getItem('user');
 
   if (user) {
+    // socket.emit('user-login', user);
     await Promise.all([
       dispatch(userActions.getUser(user)),
       dispatch(favoriteActions.get(user)),

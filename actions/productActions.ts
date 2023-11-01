@@ -1,8 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {productApi} from '../utils/api/productApi';
-import {ProductType} from '../types/productType';
 import {PaginationType} from '../types/dataTypes';
-import {dataStorage} from '../utils/handlers/dataStorage';
 
 export const productActions = {
   gets: createAsyncThunk(
@@ -27,36 +25,19 @@ export const productActions = {
     }
   }),
 
-  create: createAsyncThunk(
-    'product/create',
-    async (newProduct: ProductType, thunkAPI) => {
-      try {
-        const res = await productApi.create(newProduct);
-        return res.data;
-      } catch (error: any) {
-        if (error.data) return thunkAPI.rejectWithValue(error.data);
-        throw error;
-      }
-    },
-  ),
-
-  update: createAsyncThunk(
-    'product/update',
-    async (newProduct: ProductType, thunkAPI) => {
-      try {
-        const res = await productApi.update(newProduct);
-        return res.data;
-      } catch (error: any) {
-        if (error.data) return thunkAPI.rejectWithValue(error.data);
-        throw error;
-      }
-    },
-  ),
-
-  delete: createAsyncThunk('product/delete', async (product: ProductType) => {
+  popular: createAsyncThunk('product/popular', async () => {
     try {
-      await productApi.delete(product);
-      return true;
+      const res = await productApi.getPopularProducts();
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }),
+
+  bestSeller: createAsyncThunk('product/best-seller', async () => {
+    try {
+      const res = await productApi.getProductsBestSeller();
+      return res.data;
     } catch (error) {
       throw error;
     }
@@ -74,6 +55,15 @@ export const productActions = {
     },
   ),
 
+  getProductsView: createAsyncThunk('product/prouduct-view', async () => {
+    try {
+      const res = await productApi.getProductsView();
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }),
+
   searchProducts: createAsyncThunk(
     'product/search',
     async (searchQuery: string) => {
@@ -82,6 +72,18 @@ export const productActions = {
         return res.data;
       } catch (error) {
         throw error;
+      }
+    },
+  ),
+
+  updateProductView: createAsyncThunk(
+    'product/update/view',
+    async (productId: string) => {
+      try {
+        await productApi.updateView(productId);
+        return true;
+      } catch (error) {
+        return false;
       }
     },
   ),

@@ -9,6 +9,7 @@ interface Props {
   index: number;
   setIndex: (index: number) => void;
   categoriesUpdated: Array<CategoryType>;
+  category?: string;
 }
 
 const TabSelect = memo((props: Props) => {

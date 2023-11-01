@@ -7,3 +7,6 @@ export const white: string = '#fff';
 export const darkGreen: string = '#004731';
 export const lightGreen: string = '#83B586';
 export const dark: string = '#999';
+export const info: string = '#40BDE8';
+export const warning: string = '#D7E300';
+export const error: string = '#FF585E';

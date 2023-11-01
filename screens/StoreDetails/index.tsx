@@ -1,11 +1,16 @@
-import {View, Text, Image, ActivityIndicator} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useEffect, useMemo, useState} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../routes';
-import {Header, Icon} from '@rneui/themed';
+import {Dialog, Header, Icon} from '@rneui/themed';
 import {mainColor} from '../../constants/colors';
 import {Store} from '../../constants/images';
-import {ShopType} from '../../types/shopType';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {RootState} from '../../redux/store';
 import {shopActions} from '../../actions/shopActions';
@@ -21,18 +26,24 @@ const Tab = createMaterialTopTabNavigator();
 export default function StoreDetails({route, navigation}: Props) {
   const {storeId} = route.params;
   const {shop, loading} = useAppSelector((state: RootState) => state.shop);
+  const user = useAppSelector((state: RootState) => state.user.user);
+  const [isLoading, setIsLoading] = useState(true);
 
+  const [visible, setVisible] = useState(false);
+
+  const isFollowing = false;
   const dispatch = useAppDispatch();
-  const getStore = async () => {
-    await Promise.all([
-      dispatch(shopActions.get(storeId)),
-      dispatch(productActions.getShopProducts(storeId)),
-    ]);
-  };
 
   useEffect(() => {
+    const getStore = async () => {
+      await Promise.all([
+        dispatch(shopActions.get(storeId)),
+        dispatch(productActions.getShopProducts(storeId)),
+      ]);
+      setIsLoading(false);
+    };
     getStore();
-  }, []);
+  }, [dispatch]);
 
   const avatar = useMemo(() => {
     if (shop.user && shop.user.avatar) {
@@ -41,7 +52,23 @@ export default function StoreDetails({route, navigation}: Props) {
     return Store;
   }, [shop.user]);
 
-  const handleViewFollow = () => {};
+  const handleViewFollow = () => {
+    setVisible(true);
+    setIsLoading(false);
+  };
+  const handleFollow = () => {
+    dispatch(shopActions.updateFollow({shopId: shop._id!, userId: user?._id!}));
+  };
+
+  const handleChat = () => {
+    navigation.navigate('Chat', {
+      from: {
+        _id: shop._id!,
+        avatar: shop.user?.avatar!,
+        fullname: shop.name,
+      },
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -57,46 +84,77 @@ export default function StoreDetails({route, navigation}: Props) {
         }
         rightComponent={<Icon name="report-gmailerrorred" color={'#FAE600'} />}
       />
-      {loading && <ActivityIndicator color={mainColor} />}
-      <View>
-        <View style={styles.storeInformation}>
-          <Image style={styles.avatar} source={avatar} />
+      {isLoading ? (
+        <ActivityIndicator color={mainColor} />
+      ) : (
+        <View style={{flex: 1}}>
           <View>
-            <Text style={styles.storeName}>{shop.name}</Text>
-            <Text style={styles.followers} onPress={handleViewFollow}>
-              Người theo dõi: {shop.followers?.length}
-            </Text>
+            <View style={styles.storeInformation}>
+              <Image style={styles.avatar} source={avatar} />
+              <View>
+                <Text style={styles.storeName}>{shop.name}</Text>
+                <View style={styles.followWrap}>
+                  <Text style={styles.followers} onPress={handleViewFollow}>
+                    Người theo dõi: {shop.followers?.length}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={handleFollow}
+                    style={{
+                      ...styles.followBtn,
+                      backgroundColor: isFollowing ? '#999' : mainColor,
+                    }}>
+                    <Text style={styles.followBtnText}>
+                      {isFollowing ? 'Bỏ Theo dõi' : 'Theo dõi'}
+                    </Text>
+                  </TouchableOpacity>
+                  <Icon
+                    name="chat"
+                    color={'#777'}
+                    size={25}
+                    onPress={handleChat}
+                  />
+                </View>
+              </View>
+            </View>
           </View>
+          <View style={{flex: 1}}>
+            <Tab.Navigator
+              screenOptions={{
+                tabBarShowLabel: false,
+                tabBarActiveTintColor: mainColor,
+                tabBarPressColor: mainColor,
+                tabBarIndicatorStyle: {backgroundColor: mainColor, height: 2},
+              }}>
+              <Tab.Screen
+                name="Chi tiết"
+                component={Details}
+                options={{
+                  tabBarIcon: ({color}) => (
+                    <Icon name="info" color={color} size={22} />
+                  ),
+                }}
+              />
+              <Tab.Screen
+                name="Products"
+                component={Products}
+                options={{
+                  tabBarIcon: ({color}) => (
+                    <Icon name="inventory" color={color} size={22} />
+                  ),
+                }}
+              />
+            </Tab.Navigator>
+          </View>
+
+          <Dialog isVisible={visible} onBackdropPress={() => setVisible(false)}>
+            {shop.followers?.length ? (
+              <View></View>
+            ) : (
+              <Text style={styles.textNoFollow}>Chưa có người theo dõi</Text>
+            )}
+          </Dialog>
         </View>
-      </View>
-      <View style={{flex: 1}}>
-        <Tab.Navigator
-          screenOptions={{
-            tabBarShowLabel: false,
-            tabBarActiveTintColor: mainColor,
-            tabBarPressColor: mainColor,
-            tabBarIndicatorStyle: {backgroundColor: mainColor, height: 2},
-          }}>
-          <Tab.Screen
-            name="Chi tiết"
-            component={Details}
-            options={{
-              tabBarIcon: ({color}) => (
-                <Icon name="info" color={color} size={22} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Products"
-            component={Products}
-            options={{
-              tabBarIcon: ({color}) => (
-                <Icon name="inventory" color={color} size={22} />
-              ),
-            }}
-          />
-        </Tab.Navigator>
-      </View>
+      )}
     </View>
   );
 }

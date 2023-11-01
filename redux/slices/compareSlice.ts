@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {ProductType} from '../../types/productType';
-import {Alert} from 'react-native';
+import Toast from 'react-native-toast-message';
 
 interface InitialStateProps {
   products: ProductType[];
@@ -18,15 +18,16 @@ export const compareSlice = createSlice({
   reducers: {
     addProductCompare: (state, action) => {
       if (state.products.some(product => product._id === action.payload._id)) {
-        Alert.alert('Sản phẩm đã tồn tại');
-        return;
+        return Toast.show({type: 'warning', text1: 'Sản phẩm đã tồn tại'});
       }
       if (state.products.length >= 6) {
-        Alert.alert('Đã vượt quá số lượng');
-        return;
+        return Toast.show({type: 'warning', text1: 'Đã vượt quá số lượng'});
       }
       state.products.push(action.payload);
-      Alert.alert(`Đã thêm ${action.payload.title} vào mục so sánh`);
+      Toast.show({
+        type: 'success',
+        text1: `Đã thêm ${action.payload.title} vào mục so sánh`,
+      });
     },
     removeProductCompare: (state, action) => {
       state.products = state.products.filter(

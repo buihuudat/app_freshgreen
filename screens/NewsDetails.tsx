@@ -4,7 +4,6 @@ import {
   StyleSheet,
   useWindowDimensions,
   ScrollView,
-  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Header, Icon} from '@rneui/themed';
@@ -15,12 +14,12 @@ import {useAppDispatch, useAppSelector} from '../redux/hooks';
 import {RootState} from '../redux/store';
 import HTML from 'react-native-render-html';
 import {newsActions} from '../actions/newsActions';
+import Toast from 'react-native-toast-message';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'NewsDetails'>;
 
 export default function NewsDetails({route, navigation}: Props) {
   const {news} = route.params;
-  const newsList = useAppSelector((state: RootState) => state.news.newsList);
   const user = useAppSelector((state: RootState) => state.user.user);
   const {width} = useWindowDimensions();
   const dispatch = useAppDispatch();
@@ -39,7 +38,7 @@ export default function NewsDetails({route, navigation}: Props) {
   }, []);
 
   const handleLike = () => {
-    if (!user) return Alert.alert('⚠️', 'Bạn chưa đăng nhập');
+    if (!user) return Toast.show({type: 'Error', text1: 'Bạn chưa đăng nhập'});
     dispatch(
       newsActions.updateLikeCount({newsId: news._id!, userId: user?._id!}),
     );

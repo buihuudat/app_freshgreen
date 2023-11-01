@@ -1,7 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {shopAPI} from '../utils/api/shopApi';
-import {ShopType} from '../types/shopType';
-import {dataStorage} from '../utils/handlers/dataStorage';
 
 export const shopActions = {
   gets: createAsyncThunk('shop/gets', async () => {
@@ -21,34 +19,15 @@ export const shopActions = {
       throw error;
     }
   }),
-  create: createAsyncThunk(
-    'shop/create',
-    async (newShop: ShopType, thunkAPI) => {
+  updateFollow: createAsyncThunk<any, {shopId: string; userId: string}>(
+    'shop/follow',
+    async ({shopId, userId}) => {
       try {
-        const shops = await shopAPI.create(newShop);
-        return shops.data;
-      } catch (error: any) {
+        const res = await shopAPI.updateFollow({shopId, userId});
+        return res.data;
+      } catch (error) {
         throw error;
       }
     },
   ),
-  update: createAsyncThunk(
-    'shop/update',
-    async (newShop: ShopType, thunkAPI) => {
-      try {
-        const shops = await shopAPI.update(newShop);
-        return shops.data;
-      } catch (error: any) {
-        throw error;
-      }
-    },
-  ),
-  delete: createAsyncThunk('shop/delete', async (id: string) => {
-    try {
-      const shops = await shopAPI.delete(id);
-      return shops.data;
-    } catch (error: any) {
-      throw error;
-    }
-  }),
 };

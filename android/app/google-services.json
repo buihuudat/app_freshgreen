@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "695374466102",
+    "project_id": "freshgreen-401720",
+    "storage_bucket": "freshgreen-401720.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:695374466102:android:7dd7d93c6f19902e0e9c97",
+        "android_client_info": {
+          "package_name": "com.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "695374466102-7461eabd4kl0reksfvlsic7pgpaffl78.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app",
+            "certificate_hash": "ef2fe3dbee923ac7c90d5869f5f9038c36947028"
+          }
+        },
+        {
+          "client_id": "695374466102-ulj93qlbks4iuigo7eaql0eohetcmglc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLpI1_2vw5eEByzcvVIQcdMSAXx3nXiPs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "695374466102-ulj93qlbks4iuigo7eaql0eohetcmglc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

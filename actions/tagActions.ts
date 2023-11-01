@@ -24,23 +24,4 @@ export const tagActions = {
       throw error;
     }
   }),
-  create: createAsyncThunk(
-    'tag/create',
-    async (data: TagActionsType, thunkAPI) => {
-      try {
-        const res = await tagApi.create(data);
-        return res.data;
-      } catch (error: any) {
-        throw error;
-      }
-    },
-  ),
-  delete: createAsyncThunk('tag/delete', async (data: TagActionsType) => {
-    try {
-      const res = await tagApi.delete(data);
-      return true;
-    } catch (error: any) {
-      throw error;
-    }
-  }),
 };

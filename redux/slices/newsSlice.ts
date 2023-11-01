@@ -41,17 +41,6 @@ export const newsSlice = createSlice({
       .addCase(newsActions.gets.fulfilled, (state, action) => {
         state.newsList = action.payload.newsList;
       })
-      .addCase(newsActions.create.fulfilled, (state, action) => {
-        state.newsList.push(action.payload);
-      })
-      .addCase(newsActions.update.fulfilled, (state, action) => {
-        state.newsList.find((news, index) => {
-          if (news._id === action.payload._id) {
-            state.newsList[index] = action.payload;
-          }
-          return state;
-        });
-      })
       .addCase(newsActions.updateViewCount.fulfilled, (state, action) => {
         const newsListUpdated = state.newsList.map(news => {
           if (news._id === action.meta.arg) {
@@ -87,12 +76,6 @@ export const newsSlice = createSlice({
           newsListUpdated[index] = newsToUpdate;
           state.newsList = newsListUpdated;
         }
-      })
-      .addCase(newsActions.delete.fulfilled, (state, action) => {
-        const newsIndex = state.newsList.findIndex(
-          news => news._id === action.meta.arg,
-        );
-        state.newsList.splice(newsIndex, 1);
       })
       .addMatcher<PendingAction>(
         action => action.type.endsWith('/pending'),

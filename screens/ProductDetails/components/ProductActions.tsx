@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import React, {memo, useMemo} from 'react';
 import {styles} from '../styles';
 import {Badge, Icon} from '@rneui/themed';
@@ -12,6 +12,7 @@ import {RootStackParamList} from '../../../routes';
 import {favoriteActions} from '../../../actions/favoriteActions';
 import {cartActions} from '../../../actions/cartActions';
 import {UserType} from '../../../types/userType';
+import Toast from 'react-native-toast-message';
 
 interface Props {
   product: ProductType;
@@ -44,15 +45,11 @@ const ProductActions = memo((props: Props) => {
     });
   };
   const handleFavorite = async () => {
-    if (!user) {
-      return Alert.alert('⚠️', 'Bạn chưa đăng nhập');
-    }
+    if (!user) return Toast.show({type: 'error', text1: 'Bạn chưa đăng nhập'});
     dispatch(favoriteActions.update({userId: user?._id!, product}));
   };
   const handleAddProduct = () => {
-    if (!user) {
-      return Alert.alert('⚠️', 'Bạn chưa đăng nhập');
-    }
+    if (!user) return Toast.show({type: 'error', text1: 'Bạn chưa đăng nhập'});
     dispatch(
       cartActions.addProductToCart({
         userId: user?._id!,

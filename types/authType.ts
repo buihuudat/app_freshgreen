@@ -1,7 +1,7 @@
-import { UserType } from "./userType";
+import {UserType} from './userType';
 
 export interface LoginType {
-  phone: string;
+  username: string;
   password: string;
 }
 
@@ -21,3 +21,14 @@ export type RegisterType = {
   password: string;
   confirmPassword: string;
 };
+
+export interface LoginSocialType {
+  _id: string;
+  username: string;
+  email: string;
+  password: string;
+  fullname: {
+    firstname: string;
+    lastname: string;
+  };
+}

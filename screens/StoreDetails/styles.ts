@@ -21,10 +21,28 @@ export const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '600',
   },
-  followers: {
+  followWrap: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 30,
     paddingTop: 10,
-    color: mainColor,
   },
+  followers: {
+    color: mainColor,
+    fontWeight: '500',
+  },
+  followBtn: {
+    padding: 5,
+    borderRadius: 3,
+    elevation: 5,
+  },
+  followBtnText: {
+    fontWeight: '600',
+    color: 'white',
+  },
+
+  textNoFollow: {textAlign: 'center', fontWeight: '600'},
 
   // details
   details: {

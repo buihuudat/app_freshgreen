@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, FlatList} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {NewsType} from '../../../types/newsType';
 import {fullnameOfUser} from '../../../types/userType';
@@ -16,6 +16,9 @@ export default function NewsItem(news: NewsType) {
     ? {uri: news.author.avatar}
     : UserImage;
 
+  const thumbnail =
+    news.thumbnail || news.thumbnail !== '' ? {uri: news.thumbnail} : NoImage;
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -28,7 +31,7 @@ export default function NewsItem(news: NewsType) {
 
   return (
     <View style={styles.newsItem}>
-      <Image source={NoImage} style={styles.image} />
+      <Image source={thumbnail} style={styles.image} />
       <View style={styles.newsContent}>
         <Text style={styles.newsTitle} onPress={handleViewNew}>
           {news.title}
@@ -56,15 +59,6 @@ export default function NewsItem(news: NewsType) {
             </Text>
           </View>
         </View>
-
-        {/* <View>
-          <FlatList
-            keyExtractor={item => item._id!}
-            data={news.tags}
-            horizontal={true}
-            renderItem={({item}) => <Text>{item.name}</Text>}
-          />
-        </View> */}
       </View>
     </View>
   );

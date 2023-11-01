@@ -1,8 +1,8 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {userApi} from '../utils/api/userApi';
 import {UserType} from '../types/userType';
-import {Alert} from 'react-native';
 import {dataStorage} from '../utils/handlers/dataStorage';
+import Toast from 'react-native-toast-message';
 
 export interface changeAvatarProps {
   _id: string | undefined;
@@ -13,26 +13,23 @@ export const userActions = {
   changeAvatar: async (data: changeAvatarProps) => {
     try {
       await userApi.changeAvatar(data);
-      Alert.alert('Cập nhật thành công');
+      Toast.show({type: 'success', text1: 'Cập nhật thành công'});
       return true;
     } catch (error) {
-      Alert.alert('Cập nhật thất bại');
+      Toast.show({type: 'error', text1: 'Cập nhật thất bại'});
       throw error;
     }
   },
-  userUpdate: createAsyncThunk(
-    'user/update',
-    async (data: UserType, thunkAPI) => {
-      try {
-        const res = await userApi.updateUser(data);
-        Alert.alert('Cập nhật thành công');
-        return res.data;
-      } catch (error) {
-        Alert.alert('Cập nhật thất bại');
-        throw error;
-      }
-    },
-  ),
+  userUpdate: createAsyncThunk('user/update', async (data: UserType) => {
+    try {
+      const res = await userApi.updateUser(data);
+      Toast.show({type: 'success', text1: 'Cập nhật thành công'});
+      return res.data;
+    } catch (error) {
+      Toast.show({type: 'error', text1: 'Cập nhật thất bại'});
+      throw error;
+    }
+  }),
 
   delete: async (userId: string) => {
     try {

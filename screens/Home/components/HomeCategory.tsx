@@ -9,6 +9,7 @@ type Props = {
 
 export default function HomeCategory(props: Props) {
   const {categories} = props;
+
   return (
     <View style={styles.container}>
       <FlatList

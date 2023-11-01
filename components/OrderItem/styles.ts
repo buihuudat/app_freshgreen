@@ -88,6 +88,19 @@ export const styles = StyleSheet.create({
     fontSize: 20,
   },
 
+  accessText: {
+    textAlign: 'center',
+    fontWeight: '600',
+    padding: 10,
+    color: 'white',
+    fontSize: 18,
+  },
+  btnAccess: {
+    backgroundColor: mainColor,
+    borderRadius: 5,
+    elevation: 5,
+  },
+
   formRefure: {
     display: 'flex',
     flexDirection: 'row',

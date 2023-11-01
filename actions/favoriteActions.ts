@@ -1,8 +1,8 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {favoriteApi} from '../utils/api/favoriteApi';
 import {ProductType} from '../types/productType';
-import {Alert} from 'react-native';
 import {dataStorage} from '../utils/handlers/dataStorage';
+import Toast from 'react-native-toast-message';
 
 export const favoriteActions = {
   get: createAsyncThunk('favorite/get', async (userId: string) => {
@@ -25,7 +25,7 @@ export const favoriteActions = {
         await favoriteApi.update({userId, productId: product._id as string});
         return product;
       } catch (error) {
-        Alert.alert('Error');
+        Toast.show({type: 'error', text1: 'Cập nhật thất bại'});
         throw error;
       }
     },

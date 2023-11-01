@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
   },
 
   storeItem: {
-    width: '40%',
+    width: 150,
     borderRadius: 20,
     padding: 5,
     elevation: 5,

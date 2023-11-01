@@ -1,14 +1,15 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {cartApi} from '../utils/api/cartApi';
 import {ProductCartType} from '../types/cartType';
-import {Alert} from 'react-native';
-import {dataStorage} from '../utils/handlers/dataStorage';
+import Toast from 'react-native-toast-message';
+import {socket} from '../utils/handlers/socketConnect';
 
 export const cartActions = {
   getCart: createAsyncThunk('cart/getCart', async (userId: string) => {
     try {
       const res = await cartApi.getCart(userId);
       // await dataStorage.setItem('cart', res.data);
+      socket.emit('create-order', res.data);
       return res.data;
     } catch (error) {
       throw error;
@@ -20,15 +21,17 @@ export const cartActions = {
     {userId: string; product: ProductCartType}
   >('cart/addProduct', async ({userId, product}) => {
     if (!userId) {
-      Alert.alert('Yêu cầu đăng nhập');
-      return false;
+      return Toast.show({type: 'error', text1: 'Yêu cầu đăng nhập'});
     }
     try {
       await cartApi.addProductToCart(userId, product);
-      Alert.alert('Đã thêm sản phẩm vào giỏ hàng');
+      Toast.show({type: 'success', text1: 'Đã thêm sản phẩm vào giỏ hàng'});
       return true;
     } catch (error) {
-      Alert.alert('Error');
+      Toast.show({
+        type: 'error',
+        text1: 'Không thể thêm sản phẩm này vào giỏ hàng',
+      });
       throw error;
     }
   }),

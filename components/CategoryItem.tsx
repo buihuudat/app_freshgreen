@@ -1,21 +1,34 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
-import React from 'react';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import React, {memo} from 'react';
 import {CategoryType} from '../types/categoryType';
-import {HomeAds1} from '../constants/images';
 import {lightGreen} from '../constants/colors';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../routes';
+import {useAppDispatch} from '../redux/hooks';
+import {setCategory} from '../redux/slices/productSlice';
 
 interface Props {
   category: CategoryType;
   size?: number;
 }
 
-export default function CategoryItem(props: Props) {
+const CategoryItem = memo((props: Props) => {
   const {category} = props;
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const dispatch = useAppDispatch();
+  const handleViewProductsList = () => {
+    dispatch(setCategory(category.name));
+    navigation.navigate('Products');
+  };
   return (
-    <View
+    <TouchableOpacity
+      onPress={handleViewProductsList}
       style={{
-        width: props.size || 120,
-        height: props.size || 120,
+        width: props.size || 130,
+        height: props.size || 130,
         margin: 20,
         marginLeft: 10,
         borderRadius: 10,
@@ -29,13 +42,14 @@ export default function CategoryItem(props: Props) {
         shadowOpacity: 1,
         shadowRadius: 15,
         elevation: 5,
-        padding: 3,
       }}>
-      <Image source={HomeAds1} style={styles.image} />
+      <Image source={{uri: category.image}} style={styles.image} />
       <Text style={styles.text}>{category.name}</Text>
-    </View>
+    </TouchableOpacity>
   );
-}
+});
+
+export default CategoryItem;
 
 const styles = StyleSheet.create({
   imageBg: {
@@ -49,8 +63,7 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: '100%',
-    height: '70%',
+    height: '75%',
     borderRadius: 10,
   },
 

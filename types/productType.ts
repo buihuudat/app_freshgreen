@@ -32,6 +32,7 @@ export interface ProductType {
   currentQuantity: number;
   averageStarRating: number;
   brand: string;
+  views: number;
   shop?: ShopProductType;
   comments: Array<string | CommentType>;
   createdAt?: string;
@@ -46,6 +47,7 @@ export const InitialProduct: ProductType = {
   lastPrice: 0,
   discount: 0,
   sold: 0,
+  views: 0,
   averageStarRating: 0,
   category: '',
   tags: [],

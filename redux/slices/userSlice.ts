@@ -52,9 +52,8 @@ const userSlice = createSlice({
     setViewUserData: (state, action: PayloadAction<UserType>) => {
       state.userViewData = action.payload;
     },
-    logout: state => {
-      state.user = InitialUser;
-      // dataStorage.removeItem('user');
+    userLogout: state => {
+      state.user = null;
     },
   },
   extraReducers: builder => {
@@ -100,6 +99,6 @@ export const {
   userChangeAvatar,
   deleteUser,
   setViewUserData,
-  logout,
+  userLogout,
 } = userSlice.actions;
 export default userSlice.reducer;

@@ -8,11 +8,11 @@ import {
   ActivityIndicator,
   StatusBar,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Banner2, Logo, SplashImage} from '../constants/images';
 import {black, mainColor} from '../constants/colors';
 import {useAppDispatch} from '../redux/hooks';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../routes';
 import {checkAuth} from '../utils/handlers/checkAuth';
@@ -24,19 +24,17 @@ export default function Splash() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const fetchData = async () => {
+  const fetchAppData = async () => {
     setLoading(true);
     await Promise.all([checkAuth(dispatch), appData(dispatch)]);
+    setLoading(false);
+    navigation.navigate('HomeTab');
   };
-  useEffect(() => {
-    const fetchAppData = async () => {
-      await fetchData();
-      setLoading(false);
-      navigation.navigate('HomeTab');
-    };
-
-    fetchAppData().catch(e => console.log(e));
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchAppData();
+    }, []),
+  );
 
   return (
     <SafeAreaView>

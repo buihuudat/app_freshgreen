@@ -5,12 +5,13 @@ import {
   launchCamera,
   launchImageLibrary,
 } from 'react-native-image-picker';
-import {ActivityIndicator, Alert, Image, View} from 'react-native';
+import {ActivityIndicator, Image, View} from 'react-native';
 import {mainColor} from '../../../constants/colors';
 import {useAppDispatch} from '../../../redux/hooks';
 import {userChangeAvatar} from '../../../redux/slices/userSlice';
 import {UserType} from '../../../types/userType';
 import {imageUpload} from '../../../utils/handlers/imageUploadCloud';
+import Toast from 'react-native-toast-message';
 
 interface Props {
   open: boolean;
@@ -71,7 +72,7 @@ const ModalHandler = memo((props: Props) => {
 
     await imageUpload(imageSelected).then(avatar => {
       dispatch(userChangeAvatar({_id: user?._id as string, avatar}));
-      Alert.alert('Avatar', 'Cập nhật h đại diện thành công');
+      Toast.show({type: 'success', text1: 'Cập nhật ảnh đại diện thành công'});
     });
 
     handleCancel();

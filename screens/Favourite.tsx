@@ -1,5 +1,5 @@
 import {View, Text, FlatList, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {useAppSelector} from '../redux/hooks';
 import {RootState} from '../redux/store';
 import ProductCard from '../components/ProductCard';
@@ -8,6 +8,8 @@ import {mainColor} from '../constants/colors';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../routes';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {TouchableOpacity} from 'react-native';
+import ProductItem from '../components/ProductItem';
 
 export default function Favourite() {
   const navigation =
@@ -16,6 +18,8 @@ export default function Favourite() {
   const {favoriteProducts} = useAppSelector(
     (state: RootState) => state.favorite,
   );
+
+  const [changeView, setChangeView] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -34,15 +38,29 @@ export default function Favourite() {
             {favoriteProducts.length} sản phẩm
           </Text>
         }
+        rightComponent={
+          <TouchableOpacity onPress={() => setChangeView(!changeView)}>
+            {changeView ? (
+              <Icon name="grid-view" color={mainColor} />
+            ) : (
+              <Icon name="view-list" color={mainColor} />
+            )}
+          </TouchableOpacity>
+        }
       />
       <FlatList
         contentContainerStyle={styles.productList}
         data={favoriteProducts}
         numColumns={2}
+        key={changeView ? 'lists' : 'gird'}
         horizontal={false}
         keyExtractor={item => item._id!}
         renderItem={({item}) => {
-          return <ProductCard product={item} />;
+          return changeView ? (
+            <ProductItem {...item} />
+          ) : (
+            <ProductCard product={item} />
+          );
         }}
       />
     </View>

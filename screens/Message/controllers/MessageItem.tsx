@@ -1,12 +1,12 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 
-const Message = () => {
+const MessageItem = () => {
   return (
     <View>
-      <Text>Message</Text>
+      <Text>MessageItem</Text>
     </View>
   );
 };
 
-export default Message;
+export default MessageItem;

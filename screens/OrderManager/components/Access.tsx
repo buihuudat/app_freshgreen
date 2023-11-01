@@ -5,11 +5,11 @@ import {RootState} from '../../../redux/store';
 import {OrderStatus} from '../../../types/orderType';
 import OrderItem from '../../../components/OrderItem';
 
-const Done = () => {
+const Access = () => {
   const orders = useAppSelector((state: RootState) => state.order.data);
 
   const orderPending = useMemo(
-    () => orders.filter(order => order.status === OrderStatus.done),
+    () => orders.filter(order => order.status === OrderStatus.access),
     [orders],
   );
 
@@ -23,4 +23,4 @@ const Done = () => {
   );
 };
 
-export default Done;
+export default Access;

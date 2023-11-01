@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
-import React, {useMemo} from 'react';
-import {Divider} from '@rneui/themed';
+import React, {useMemo, useState} from 'react';
+import {Dialog, Divider} from '@rneui/themed';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../routes';
@@ -22,10 +22,18 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {RootState} from '../../redux/store';
 import {OrderStatus} from '../../types/orderType';
 import {logout} from '../../utils/handlers/logout';
+import {useDispatch} from 'react-redux';
 
 export default function Account() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch();
+
+  const [visible, setVisible] = useState(false);
+
+  const toggleDialog = () => {
+    setVisible(!visible);
+  };
 
   const user = useAppSelector((state: RootState) => state.user.user);
   const orders = useAppSelector((state: RootState) => state.order.data);
@@ -41,10 +49,15 @@ export default function Account() {
   }, [orders]);
 
   const handleLogout = () => {
-    logout().then(() => {
-      navigation.navigate('Splash');
+    setVisible(true);
+    logout(dispatch).then(() => {
+      navigation.navigate('Home');
+      setVisible(false);
     });
   };
+
+  const avatar =
+    user?.avatar || user?.avatar !== '' ? {uri: user?.avatar} : UserImage;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -75,7 +88,7 @@ export default function Account() {
         ) : (
           <View style={styles.inLogin}>
             <View style={styles.accountLogin}>
-              <Image source={{uri: user.avatar}} style={styles.loginImage} />
+              <Image source={avatar} style={styles.loginImage} />
               <View style={styles.userInforName}>
                 <Text style={styles.fullname}>
                   {fullnameOfUser(user.fullname)}
@@ -141,6 +154,17 @@ export default function Account() {
           </View>
         )}
       </ScrollView>
+
+      <Dialog
+        statusBarTranslucent
+        isVisible={visible}
+        onBackdropPress={toggleDialog}>
+        <Dialog.Title
+          title="Đang đăng xuất!"
+          titleStyle={{textAlign: 'center', fontSize: 22}}
+        />
+        <Dialog.Loading />
+      </Dialog>
     </SafeAreaView>
   );
 }

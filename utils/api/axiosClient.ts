@@ -1,13 +1,14 @@
 import axios from 'axios';
 import queryString from 'query-string';
-import {Alert} from 'react-native';
 import {dataStorage} from '../handlers/dataStorage';
+import Toast from 'react-native-toast-message';
 
-// let IP = '192.168.0.206'; // ot
-// let IP = '10.68.1.215'; //ticos
+// let IP = '192.168.0.85'; // ot
+// let IP = '10.68.1.252'; //ticos
 let IP = '192.168.1.7';
 
 const PORT = 5000;
+export const host = `http://${IP}:${PORT}`;
 const baseURL = `http://${IP}:${PORT}/api/v1`;
 
 const axiosClient = axios.create({
@@ -38,10 +39,11 @@ axiosClient.interceptors.response.use(
   },
   error => {
     if (!error.response) {
-      return Alert.alert(
-        'Lỗi',
-        'Kết nối không thành công. Vui lòng kiểm tra kết nối mạng của bạn.',
-      );
+      return Toast.show({
+        type: 'error',
+        text1:
+          'Kết nối không thành công. Vui lòng kiểm tra kết nối mạng của bạn.',
+      });
     }
     throw error.response;
   },

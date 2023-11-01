@@ -1,7 +1,7 @@
 import {View, Text, FlatList, RefreshControl} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {Header, Icon} from '@rneui/themed';
+import {Header, Icon, LinearProgress} from '@rneui/themed';
 import {mainColor} from '../../constants/colors';
 import moment from 'moment';
 import {styles} from './styles';
@@ -10,21 +10,38 @@ import NewsItem from './components/NewsItem';
 import {newsActions} from '../../actions/newsActions';
 import _ from 'lodash';
 import {NewsType} from '../../types/newsType';
+import {ActivityIndicator} from 'react-native';
 
 export default function News() {
   const newsList = useAppSelector(state => state.news.newsList);
   const [tagSelected, setTagSelected] = useState<Array<string>>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [newsFiltered, setNewsFiltered] = useState<Array<NewsType>>(newsList);
+  const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useAppDispatch();
 
   const allTags = newsList.flatMap(data => data.tags);
   const tags = Array.from(new Set(allTags.map(tag => tag.name)));
 
-  const handleRefresh = () => {
+  const fetchNews = async () => {
     setRefreshing(true);
-    dispatch(newsActions.gets()).then(() => setRefreshing(false));
+    try {
+      dispatch(newsActions.gets());
+    } catch (error) {
+      throw error;
+    } finally {
+      setRefreshing(false);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
+
+  const handleRefresh = () => {
+    fetchNews();
   };
 
   const handleSelectTag = (tag: string) => {
@@ -51,6 +68,9 @@ export default function News() {
   return (
     <View style={styles.container}>
       <Header
+        leftComponent={
+          isLoading ? <ActivityIndicator color={mainColor} /> : <></>
+        }
         centerComponent={
           <Text style={{textTransform: 'capitalize', fontSize: 18}}>
             {moment().format('dddd, Do MMMM  YYYY')}
@@ -60,6 +80,8 @@ export default function News() {
         barStyle="dark-content"
         backgroundColor="transparent"
       />
+
+      {isLoading && <LinearProgress />}
 
       <FlatList
         data={tags}

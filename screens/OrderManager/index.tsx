@@ -8,8 +8,8 @@ import {RootStackParamList} from '../../routes';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Refure from './components/Refure';
 import Pending from './components/Pending';
-import Done from './components/Done';
 import CartIcon from '../../components/CartIcon';
+import Access from './components/Access';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -38,7 +38,7 @@ const OrderManager = () => {
             tabBarIndicatorStyle: {backgroundColor: mainColor, height: 3},
           }}>
           <Tab.Screen
-            name="Spending"
+            name="Chờ xác nhận"
             component={Pending}
             options={{
               tabBarIcon: ({color}) => (
@@ -47,8 +47,8 @@ const OrderManager = () => {
             }}
           />
           <Tab.Screen
-            name="Refure"
-            component={Refure}
+            name="Đã xác nhận"
+            component={Access}
             options={{
               tabBarIcon: ({color}) => (
                 <Icon name="cancel-presentation" color={color} size={22} />
@@ -56,8 +56,8 @@ const OrderManager = () => {
             }}
           />
           <Tab.Screen
-            name="Done"
-            component={Done}
+            name="Đã hủy"
+            component={Refure}
             options={{
               tabBarIcon: ({color}) => (
                 <Icon name="credit-score" color={color} size={22} />

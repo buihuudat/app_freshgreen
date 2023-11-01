@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FreshGreen</string>
+    <string name="facebook_app_id">526429319706108</string>
+    <string name="facebook_client_token">a36ba2aabf3e07e053954b54c5c3fbd7</string>
 </resources>

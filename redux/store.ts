@@ -1,4 +1,4 @@
-import {configureStore} from '@reduxjs/toolkit';
+import {configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
 import userSlice from './slices/userSlice';
 import categorySlice from './slices/categorySlice';
 import tagSlice from './slices/tagSlice';
@@ -14,6 +14,13 @@ import compareSlice from './slices/compareSlice';
 import faqSlice from './slices/faqSlice';
 import commentSlice from './slices/commentSlice';
 import notificationSlice from './slices/notificationSlice';
+import settingsSlice from './slices/settingsSlice';
+import messageSlice from './slices/messageSlice';
+
+const middleware = getDefaultMiddleware({
+  immutableCheck: false,
+  serializableCheck: false,
+});
 
 export const store = configureStore({
   reducer: {
@@ -32,7 +39,11 @@ export const store = configureStore({
     faq: faqSlice,
     comment: commentSlice,
     notification: notificationSlice,
+    settings: settingsSlice,
+    messages: messageSlice,
   },
+  middleware,
+  devTools: process.env.NODE_ENV !== 'production',
 });
 
 export type RootState = ReturnType<typeof store.getState>;

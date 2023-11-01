@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, ImageBackground, Alert} from 'react-native';
+import {View, Text, StyleSheet, ImageBackground} from 'react-native';
 import React, {memo, useEffect, useState} from 'react';
 import {ProductType} from '../types/productType';
 import {Button, Card, Icon} from '@rneui/themed';
@@ -9,6 +9,7 @@ import moment from 'moment';
 import {useAppDispatch, useAppSelector} from '../redux/hooks';
 import {RootState} from '../redux/store';
 import {cartActions} from '../actions/cartActions';
+import Toast from 'react-native-toast-message';
 
 interface Props {
   product: ProductType;
@@ -28,7 +29,7 @@ const ProductCardSale = memo((product: ProductType) => {
   const dispatch = useAppDispatch();
 
   const handleAddProduct = () => {
-    if (!user) return Alert.alert('⚠️', 'Bạn chưa đăng nhập');
+    if (!user) return Toast.show({type: 'error', text1: 'Bạn chưa đăng nhập'});
     dispatch(
       cartActions.addProductToCart({
         userId: user?._id!,

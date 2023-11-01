@@ -20,6 +20,8 @@ const Categories = () => {
   categoriesUpdated.unshift({
     _id: 'all',
     name: 'Tất cả',
+    image:
+      'https://e7.pngegg.com/pngimages/75/866/png-clipart-category-management-organization-retail-management-miscellaneous-text-thumbnail.png',
   });
 
   return (

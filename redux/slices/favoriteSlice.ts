@@ -1,14 +1,14 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, isAnyOf} from '@reduxjs/toolkit';
 import {favoriteActions} from '../../actions/favoriteActions';
+import {ProductType} from '../../types/productType';
 import {
   FulfilledAction,
   PendingAction,
   RejectedAction,
 } from '../../types/silceType';
-import {ProductType} from '../../types/productType';
 
 interface InitialStateProps {
-  favoriteProducts: Array<ProductType>;
+  favoriteProducts: ProductType[];
   loading: boolean;
   isFavorite: boolean;
 }
@@ -23,9 +23,6 @@ export const favoriteSlice = createSlice({
   name: 'favorite',
   initialState,
   reducers: {
-    setFavorite: (state, action) => {
-      state.favoriteProducts = action.payload;
-    },
     clearFavorite: state => {
       state.favoriteProducts = [];
     },
@@ -41,20 +38,41 @@ export const favoriteSlice = createSlice({
           state.favoriteProducts = [...updateFvorite];
         }
       })
-      .addCase(favoriteActions.update.fulfilled, (state, action) => {
-        const id = action.payload._id;
-        const index = state.favoriteProducts.findIndex(
-          product => product._id === id,
-        );
 
-        if (index !== -1) {
-          state.favoriteProducts = state.favoriteProducts.filter(
-            product => product._id !== id,
+      .addMatcher(
+        isAnyOf(
+          favoriteActions.update.rejected,
+          favoriteActions.update.pending,
+        ),
+        (state, action) => {
+          const productCurrent = action.meta.arg.product;
+          const id = productCurrent._id;
+          const index = state.favoriteProducts.findIndex(
+            product => product._id === id,
           );
-        } else {
-          state.favoriteProducts.push(action.payload);
-        }
-      })
+          const checkPendingType =
+            action.type === favoriteActions.update.pending.type;
+
+          if (index !== -1) {
+            if (checkPendingType) {
+              state.favoriteProducts = state.favoriteProducts.filter(
+                product => product._id !== id,
+              );
+            } else {
+              state.favoriteProducts.push(productCurrent);
+            }
+          } else {
+            if (checkPendingType) {
+              state.favoriteProducts.push(productCurrent);
+            } else {
+              state.favoriteProducts = state.favoriteProducts.filter(
+                product => product._id !== id,
+              );
+            }
+          }
+        },
+      )
+
       .addMatcher<PendingAction>(
         action => action.type.endsWith('/pending'),
         state => {
@@ -72,5 +90,5 @@ export const favoriteSlice = createSlice({
   },
 });
 
-export const {setFavorite, clearFavorite} = favoriteSlice.actions;
+export const {clearFavorite} = favoriteSlice.actions;
 export default favoriteSlice.reducer;

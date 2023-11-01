@@ -1,5 +1,5 @@
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {memo, useState} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {memo} from 'react';
 import {Card, Icon} from '@rneui/themed';
 import {ProductType} from '../types/productType';
 import {Rating} from 'react-native-ratings';
@@ -12,6 +12,7 @@ import {useAppDispatch, useAppSelector} from '../redux/hooks';
 import {favoriteActions} from '../actions/favoriteActions';
 import {RootState} from '../redux/store';
 import {cartActions} from '../actions/cartActions';
+import Toast from 'react-native-toast-message';
 
 interface Props {
   product: ProductType;
@@ -36,11 +37,11 @@ const ProductCard = memo((props: Props) => {
   };
 
   const handleFavorite = () => {
-    if (!user) return Alert.alert('⚠️', 'Bạn chưa đăng nhập');
+    if (!user) return Toast.show({type: 'error', text1: 'Bạn chưa đăng nhập'});
     dispatch(favoriteActions.update({userId: user?._id!, product}));
   };
   const handleAddProduct = () => {
-    if (!user) return Alert.alert('⚠️', 'Bạn chưa đăng nhập');
+    if (!user) return Toast.show({type: 'error', text1: 'Bạn chưa đăng nhập'});
     dispatch(
       cartActions.addProductToCart({
         userId: user?._id!,

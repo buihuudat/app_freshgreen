@@ -1,8 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {newsApi} from '../utils/api/newsApi';
-import {NewsType} from '../types/newsType';
-import {AxiosResponse} from 'axios';
-import {dataStorage} from '../utils/handlers/dataStorage';
 
 export const newsActions = {
   gets: createAsyncThunk('news/gets', async () => {
@@ -20,37 +17,6 @@ export const newsActions = {
       // const res = await newsApi.gets(_id)
     } catch (error) {}
   }),
-
-  create: createAsyncThunk('news/create', async (news: NewsType, thunkAPI) => {
-    try {
-      const res: AxiosResponse<NewsType> = await newsApi.create(news);
-      return res.data;
-    } catch (error: any) {
-      if (error.data) {
-        return thunkAPI.rejectWithValue(error.data);
-      }
-      throw error;
-    }
-  }),
-
-  update: createAsyncThunk('news/update', async (news: NewsType, thunkAPI) => {
-    try {
-      const res = await newsApi.update(news);
-      return res.data;
-    } catch (error: any) {
-      throw error;
-    }
-  }),
-
-  delete: createAsyncThunk('news/delete', async (_id: string) => {
-    try {
-      const res = await newsApi.delete(_id);
-      return true;
-    } catch (error: any) {
-      throw error;
-    }
-  }),
-
   updateViewCount: createAsyncThunk(
     'news/update/viewCount',
     async (_id: string) => {

@@ -1,4 +1,3 @@
-import {View} from 'react-native';
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import Home from '../screens/Home';

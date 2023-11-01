@@ -73,7 +73,6 @@ export const styles = StyleSheet.create({
 
   btn: {
     marginTop: 'auto',
-    backgroundColor: mainColor,
     padding: 10,
     margin: 30,
     borderRadius: 5,

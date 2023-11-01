@@ -1,5 +1,11 @@
-import {View, Text, FlatList, TouchableOpacity} from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
+import React, {memo, useState} from 'react';
 import {OrderItemType, OrderStatus, PayMethod} from '../../types/orderType';
 import OrderProductItem from './components/OrderProductItem';
 import moment from 'moment';
@@ -7,8 +13,12 @@ import {styles} from './styles';
 import {Divider} from '@rneui/themed';
 import {moneyFormat} from '../../utils/handlers/moneyFormat';
 import {mainColor} from '../../constants/colors';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import {orderActions} from '../../actions/orderActions';
+import {RootState} from '../../redux/store';
 
-const OrderItem = (order: OrderItemType) => {
+const OrderItem = memo((order: OrderItemType) => {
+  const [isLoading, setIsLoading] = useState(false);
   const getColor = (status: OrderStatus) => {
     switch (status) {
       case OrderStatus.pending:
@@ -18,6 +28,22 @@ const OrderItem = (order: OrderItemType) => {
       default:
         return mainColor;
     }
+  };
+
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state: RootState) => state.user.user);
+
+  const handleAccess = async () => {
+    setIsLoading(true);
+    dispatch(
+      orderActions.submitStatusOrder({
+        userId: user!._id as string,
+        orderId: order._id as string,
+        status: OrderStatus.done,
+      }),
+    )
+      .unwrap()
+      .finally(() => setIsLoading(false));
   };
 
   const color = getColor(order.status);
@@ -79,6 +105,17 @@ const OrderItem = (order: OrderItemType) => {
             </TouchableOpacity>
           </View>
         )}
+        {order.status === OrderStatus.access &&
+          (isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <View>
+              <Text style={{...styles.text, color}}>Đang giao hàng</Text>
+              <TouchableOpacity onPress={handleAccess} style={styles.btnAccess}>
+                <Text style={styles.accessText}>Đã nhận được hàng</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
         {order.status === OrderStatus.refuse && (
           <View>
             <Text style={{...styles.text, color}}>Đã hủy</Text>
@@ -94,6 +131,6 @@ const OrderItem = (order: OrderItemType) => {
       </View>
     </View>
   );
-};
+});
 
 export default OrderItem;

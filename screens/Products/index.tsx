@@ -1,5 +1,5 @@
 import {FlatList, RefreshControl, SafeAreaView, View} from 'react-native';
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import Header from './components/Header';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {RootState} from '../../redux/store';
@@ -10,23 +10,61 @@ import ProductCard from '../../components/ProductCard';
 import {SelectMenu} from './components/SelectMenu';
 import {styles} from './styles';
 import TabSelect from './components/TabSelect';
+import ProductItem from '../../components/ProductItem';
 
 export default function Products() {
-  const {products} = useAppSelector((state: RootState) => state.product);
+  const {products, category} = useAppSelector(
+    (state: RootState) => state.product,
+  );
+
   const [index, setIndex] = useState(0);
   const [timeOptions, setTimeOptions] = useState<string>(Time.all);
   const [priceOptions, setpriceOptions] = useState<string>(Price.all);
   const [refreshing, setRefreshing] = useState(false);
+  const [changeFilter, setChangeFilter] = useState(false);
+  const [changeView, setChangeView] = useState(true);
 
   const categories = useAppSelector(
     (state: RootState) => state.category.categories,
   );
   const dispatch = useAppDispatch();
-  const categoriesUpdated = [{_id: '0', name: 'all'}, ...categories];
+  const categoriesUpdated = [{_id: '0', name: 'all', image: ''}, ...categories];
+  let productUpdated = [...products];
+
+  const fetchProducts = async () => {
+    setRefreshing(true);
+    try {
+      await dispatch(productActions.gets({page: 1})).then(() =>
+        setRefreshing(false),
+      );
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    if (category) {
+      productUpdated = products.filter(
+        product => product.category === category,
+      );
+      const categoryIndex = categoriesUpdated.findIndex(
+        data => data.name === category,
+      );
+      if (categoryIndex !== -1) {
+        setIndex(categoryIndex);
+      }
+    }
+
+    return () => {};
+  }, [category]);
 
   const productFiltered = useMemo(() => {
+    setChangeFilter(true);
     const categorySelected: string = categoriesUpdated[index].name;
-    let productUpdated = [...products];
 
     if (categorySelected !== 'all') {
       productUpdated = products.filter(
@@ -34,26 +72,29 @@ export default function Products() {
       );
     }
     if (priceOptions !== Price.all) {
-      productUpdated = _.orderBy(productUpdated, [
-        'lastPrice',
+      productUpdated = _.orderBy(
+        productUpdated,
+        ['lastPrice'],
         priceOptions === Price.up ? 'asc' : 'desc',
-      ]);
+      );
     }
     if (timeOptions !== Time.all) {
-      productUpdated = _.orderBy(productUpdated, [
-        timeOptions === Time.new ? 'updatedAt' : 'sold',
+      productUpdated = _.orderBy(
+        productUpdated,
+        [timeOptions === Time.new ? 'updatedAt' : 'sold'],
         'desc',
-      ]);
+      );
     }
     return productUpdated;
-  }, [categoriesUpdated[index].name, timeOptions, priceOptions, products]);
+  }, [index, timeOptions, priceOptions, products]);
 
   const refreshProducts = () => {
-    setRefreshing(true);
-    dispatch(productActions.gets({page: 1})).then(() => setRefreshing(false));
+    fetchProducts();
   };
 
   const loadMoreProduct = () => {};
+  const throttledRefresh = _.throttle(refreshProducts, 1000);
+
   return (
     <SafeAreaView style={styles.container}>
       <Header />
@@ -70,22 +111,29 @@ export default function Products() {
           timeOptions={timeOptions}
           setpriceOptions={setpriceOptions}
           setTimeOptions={setTimeOptions}
+          changeView={changeView}
+          setChangeView={setChangeView}
         />
 
         <FlatList
+          key={changeView ? 'lists' : 'gird'}
           contentContainerStyle={styles.productList}
-          numColumns={2}
-          data={productFiltered}
+          numColumns={changeView ? 1 : 2}
+          data={changeFilter ? productFiltered : products}
           keyExtractor={item => item._id!}
           renderItem={({item}) => {
-            return <ProductCard product={item} />;
+            return changeView ? (
+              <ProductItem {...item} />
+            ) : (
+              <ProductCard product={item} />
+            );
           }}
           onEndReached={loadMoreProduct}
           onEndReachedThreshold={0.1}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
-              onRefresh={refreshProducts}
+              onRefresh={throttledRefresh}
             />
           }
         />

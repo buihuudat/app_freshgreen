@@ -8,9 +8,12 @@ import ProductCard from '../../../components/ProductCard';
 
 const BestSellers = ({products}: {products: Array<ProductType>}) => {
   const date = new Date();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Bán chạy nhất tháng {date.getMonth()}</Text>
+      <Text style={styles.title}>
+        Bán chạy nhất tháng {date.getMonth() + 1}
+      </Text>
 
       <View>
         <ImageBackground

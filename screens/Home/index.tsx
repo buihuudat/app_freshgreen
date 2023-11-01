@@ -1,5 +1,5 @@
 import {ScrollView, StyleSheet, RefreshControl, View} from 'react-native';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import HomeSwiper from './components/HomeSwiper';
 import HomeAds from './components/HomeAds';
 import HomeProducts from './components/HomeProducts';
@@ -10,11 +10,15 @@ import BestSellers from './components/BestSellers';
 import HomeSale from './components/HomeSale';
 import Header from './components/Header';
 import HomeCategory from './components/HomeCategory';
+import {settingsActions} from '../../actions/settingsActionts';
+import {categoryActions} from '../../actions/categoryActions';
+import {mainColor} from '../../constants/colors';
 
 export default function Home() {
-  const {products} = useAppSelector((state: RootState) => state.product);
-
-  const loading = false;
+  const {popular, bestSeller, productsView} = useAppSelector(
+    (state: RootState) => state.product,
+  );
+  const [refreshing, setRefreshing] = useState(false);
 
   const categories = useAppSelector(
     (state: RootState) => state.category.categories,
@@ -22,18 +26,25 @@ export default function Home() {
 
   const dispatch = useAppDispatch();
 
-  const getProducts = async () => {
+  const fetchData = async () => {
+    setRefreshing(true);
     try {
-      await dispatch(productActions.gets({page: 1, perPage: 10}));
+      await Promise.all([
+        dispatch(settingsActions.getBanner()),
+        dispatch(categoryActions.gets()),
+        dispatch(productActions.bestSeller()),
+        dispatch(productActions.popular()),
+        dispatch(productActions.getProductsView()),
+      ]);
     } catch (error) {
       console.error('Error fetching products:', error);
+    } finally {
+      setRefreshing(false);
     }
   };
 
-  const memoizedProducts = useMemo(() => products.slice(0, 8), [products]);
-
   const handleRefresh = useCallback(() => {
-    getProducts();
+    fetchData();
   }, [dispatch]);
 
   return (
@@ -42,7 +53,7 @@ export default function Home() {
       <ScrollView
         style={styles.container}
         refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={handleRefresh} />
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
         }>
         <HomeSwiper />
 
@@ -50,11 +61,11 @@ export default function Home() {
 
         <HomeCategory categories={categories} />
 
-        <HomeProducts products={memoizedProducts} />
+        <HomeProducts products={productsView} />
 
-        <BestSellers products={memoizedProducts} />
+        <BestSellers products={popular} />
 
-        <HomeSale products={memoizedProducts} />
+        <HomeSale products={bestSeller} />
       </ScrollView>
     </View>
   );

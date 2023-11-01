@@ -1,9 +1,9 @@
 import {CommentType} from './types/commentType';
+import {FromType} from './types/messageType';
 import {NewsType} from './types/newsType';
 import {OrderItemType} from './types/orderType';
 import {PayData} from './types/paymentType';
-import {ProductType, ShopProductType} from './types/productType';
-import {ShopType} from './types/shopType';
+import {ProductType} from './types/productType';
 
 export type RootStackParamList = {
   Splash: undefined;
@@ -40,7 +40,12 @@ export type RootStackParamList = {
   Search: undefined;
   Notification: undefined;
   Message: undefined;
+  Chat: {
+    from: FromType;
+  };
 
   Login: undefined;
   Register: undefined;
+  ForgotPassword: undefined;
+  LoginWithSMS: undefined;
 };

@@ -1,4 +1,8 @@
 #import "AppDelegate.h"
+#import "RNFBMessagingModule.h"
+
+
+self.initialProps = [RNFBMessagingModule addCustomPropsToUserProps:nil withLaunchOptions:launchOptions];
 
 #import <React/RCTBundleURLProvider.h>
 

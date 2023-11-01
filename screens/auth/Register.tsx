@@ -177,19 +177,19 @@ export default function Register() {
   return (
     <View>
       <Header
-        barStyle="light-content"
-        backgroundColor={mainColor}
+        barStyle="dark-content"
+        backgroundColor={'transparent'}
         leftComponent={
           <Icon
             name="arrow-back"
             onPress={() => navigation.goBack()}
-            color={'white'}
+            color={mainColor}
           />
         }
         rightComponent={
           <Icon
             name="home"
-            color={'white'}
+            color={mainColor}
             onPress={() => navigation.navigate('HomeTab')}
           />
         }

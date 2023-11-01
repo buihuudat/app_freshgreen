@@ -17,6 +17,7 @@ export interface NewsType {
   content: string;
   viewCount: number;
   likeCount: Array<string>;
+  thumbnail: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

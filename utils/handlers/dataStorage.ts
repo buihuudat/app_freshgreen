@@ -10,7 +10,8 @@ type KeyProps =
   | 'product'
   | 'shop'
   | 'categories'
-  | 'news';
+  | 'news'
+  | 'token';
 
 export const dataStorage = {
   setItem: async (key: KeyProps, value: any) => {

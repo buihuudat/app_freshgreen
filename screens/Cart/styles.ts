@@ -78,7 +78,6 @@ export const styles = StyleSheet.create({
 
   bill: {
     flex: 0.5,
-    paddingHorizontal: 30,
     paddingVertical: 10,
   },
 
@@ -100,7 +99,7 @@ export const styles = StyleSheet.create({
     color: '#333',
   },
   billPriceItem: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '600',
     color: mainColor,
   },
@@ -147,7 +146,8 @@ export const styles = StyleSheet.create({
     backgroundColor: mainColor,
     borderRadius: 5,
     elevation: 5,
-    marginTop: 10,
+    margin: 10,
+    marginBottom: 20,
   },
 
   btnTextOrder: {

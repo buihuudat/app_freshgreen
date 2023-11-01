@@ -1,6 +1,6 @@
 import React from 'react';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import {Icon} from '@rneui/themed';
+import {Avatar, Icon} from '@rneui/themed';
 import {mainColor} from '../constants/colors';
 import Home from '../screens/Home';
 import Products from '../screens/Products';
@@ -18,6 +18,7 @@ export default function BottomTabs() {
   const notificationCount = useAppSelector(
     (state: RootState) => state.notification.notifications,
   ).length;
+  const user = useAppSelector((state: RootState) => state.user.user);
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -87,9 +88,12 @@ export default function BottomTabs() {
         component={Account}
         options={{
           tabBarLabel: 'Tài khoản',
-          tabBarIcon: ({color}) => (
-            <Icon name="account-circle" color={color} size={iconSize} />
-          ),
+          tabBarIcon: ({color}) =>
+            user ? (
+              <Avatar size={iconSize} rounded source={{uri: user.avatar}} />
+            ) : (
+              <Icon name="account-circle" color={color} size={iconSize} />
+            ),
         }}
       />
     </Tab.Navigator>

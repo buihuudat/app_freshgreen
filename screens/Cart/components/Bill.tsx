@@ -13,7 +13,6 @@ import {voucherActions} from '../../../actions/voucherActions';
 import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 import {RootState} from '../../../redux/store';
 import {orderActions} from '../../../actions/orderActions';
-import {Alert} from 'react-native';
 import {
   OrderItemType,
   OrderStatus,
@@ -26,19 +25,19 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../routes';
 import {ActivityIndicator} from 'react-native';
 import {clearCart} from '../../../redux/slices/cartSlice';
-import {mainColor} from '../../../constants/colors';
+import {info, mainColor} from '../../../constants/colors';
+import Toast from 'react-native-toast-message';
+import {ProductCartType} from '../../../types/cartType';
 
 const Bill = () => {
+  const {data: cart} = useAppSelector((state: RootState) => state.cart);
+  const user = useAppSelector((state: RootState) => state.user.user);
+
+  const [voucherLoading, setVoucherLoading] = useState(false);
   const [voucher, setVoucher] = useState('');
   const [payMethod, setPayMethod] = useState(0);
   const [orderLoading, setOrderLoading] = useState(false);
-
-  const {
-    voucher: {discount},
-    loading: voucherLoading,
-  } = useAppSelector((state: RootState) => state.voucher);
-  const user = useAppSelector((state: RootState) => state.user.user);
-  const {data: cart} = useAppSelector((state: RootState) => state.cart);
+  const [currentDiscount, setCurrentDiscount] = useState(0);
 
   const dispatch = useAppDispatch();
   const navigation =
@@ -46,7 +45,11 @@ const Bill = () => {
 
   const totalPrice = useMemo(
     () =>
-      cart.products.reduce((acc, cur) => (acc + cur.lastPrice) * cur.count, 0),
+      cart.products.reduce(
+        (acc: number, cur: ProductCartType) =>
+          (acc + cur.lastPrice) * cur.count,
+        0,
+      ),
     [cart.products],
   );
 
@@ -56,8 +59,8 @@ const Bill = () => {
   );
 
   const priceLastDiscount = useMemo(
-    () => (discount ? (totalPrice * discount) / 100 : 0),
-    [discount, totalPrice],
+    () => (currentDiscount ? (totalPrice * currentDiscount) / 100 : 0),
+    [currentDiscount, totalPrice],
   );
 
   const totalPriceOrder = useMemo(
@@ -66,14 +69,25 @@ const Bill = () => {
   );
 
   const handleApplyVoucher = async () => {
+    setVoucherLoading(true);
     await dispatch(voucherActions.get(voucher))
       .unwrap()
-      .catch((e: any) => Alert.alert('Voucher', e.error));
+      .then(data => setCurrentDiscount(data.discount))
+      .catch((e: any) => {
+        Toast.show({type: 'error', text1: e.error});
+        setCurrentDiscount(0);
+      })
+      .finally(() => {
+        setVoucherLoading(false);
+      });
   };
 
   const handleOrder = async () => {
     if (!user?.address) {
-      return Alert.alert('!', 'Cần thêm địa chỉ trước khi thanh toán');
+      return Toast.show({
+        type: 'warning',
+        text1: 'Cần thêm địa chỉ trước khi thanh toán',
+      });
     }
 
     const order: OrderItemType = {
@@ -81,7 +95,7 @@ const Bill = () => {
       totalPrice: totalPriceOrder,
       voucherUsed: {
         voucher,
-        discount,
+        discount: currentDiscount,
       },
       pay: {
         method: PayMethod.lastPay,
@@ -97,13 +111,13 @@ const Bill = () => {
           userId: user._id!,
           totalPrice,
           amount: totalPriceOrder,
-          address: addressOfUser(user.address),
+          address: addressOfUser(user.address)!,
           phone: user.phone,
           email: user.email,
           nameOfUser: fullnameOfUser(user.fullname),
           discount: {
             voucher,
-            discount,
+            discount: currentDiscount,
           },
         },
 
@@ -128,7 +142,7 @@ const Bill = () => {
 
   return (
     <View style={styles.bill}>
-      <ScrollView>
+      <ScrollView style={{paddingHorizontal: 10}}>
         <View style={styles.billItem}>
           <Text style={styles.billTextItem}>Tổng đơn hàng:</Text>
           <Text style={styles.billPriceItem}>{moneyFormat(totalPrice)}</Text>
@@ -136,6 +150,11 @@ const Bill = () => {
         <View style={styles.billItem}>
           <Text style={styles.billTextItem}>Phí vận chuyển:</Text>
           <Text style={styles.billPriceItem}>{moneyFormat(deliveryCost)}</Text>
+        </View>
+
+        <View style={styles.billItem}>
+          <Text style={styles.billTextItem}>Số điện thoại nhận hàng:</Text>
+          <Text style={styles.billPriceItem}>{user?.phone}</Text>
         </View>
 
         <View style={styles.voucher}>
@@ -157,11 +176,30 @@ const Bill = () => {
               </TouchableOpacity>
             )}
           </View>
+          <View style={styles.billItem}>
+            <Text style={styles.billTextItem}>Địa chỉ nhận hàng:</Text>
+            {addressOfUser(user?.address!) ? (
+              <Text style={{...styles.billPriceItem, flex: 1}}>
+                {addressOfUser(user?.address!)}
+              </Text>
+            ) : (
+              <Text
+                onPress={() => navigation.navigate('Profile')}
+                style={{
+                  fontStyle: 'italic',
+                  fontSize: 18,
+                  fontWeight: '600',
+                  color: info,
+                }}>
+                Thêm địa chỉ
+              </Text>
+            )}
+          </View>
         </View>
 
-        {discount > 0 && (
+        {currentDiscount > 0 && (
           <View style={styles.billItem}>
-            <Text style={styles.billTextItem}>Giảm: ({discount}%)</Text>
+            <Text style={styles.billTextItem}>Giảm: ({currentDiscount}%)</Text>
             <Text style={styles.billDiscountItem}>
               -{moneyFormat(priceLastDiscount)}
             </Text>

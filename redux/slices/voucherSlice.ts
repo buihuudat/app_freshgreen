@@ -31,23 +31,10 @@ export const voucherSlice = createSlice({
       .addCase(voucherActions.get.fulfilled, (state, action) => {
         state.voucher = action.payload;
       })
-      .addCase(voucherActions.update.fulfilled, (state, action) => {
-        state.vouchers.find((voucher, index) => {
-          if (voucher._id === action.payload._id) {
-            state.vouchers[index] = action.payload;
-          }
-        });
-      })
-      .addCase(voucherActions.delete.fulfilled, (state, action) => {
-        const index = state.vouchers.findIndex(
-          voucher => voucher._id === action.meta.arg._id,
-        );
-        state.vouchers.splice(index, 1);
-      })
       .addMatcher<PendingAction>(
         action => action.type.endsWith('/pending'),
         state => {
-          state.loading = false;
+          state.loading = true;
         },
       )
       .addMatcher<FulfilledAction | RejectedAction>(

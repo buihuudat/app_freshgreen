@@ -1,59 +1,88 @@
 import {View, Text} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {RootStackParamList} from '../../routes';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Header, Icon} from '@rneui/themed';
 import {mainColor} from '../../constants/colors';
-import {StripeProvider} from '@stripe/stripe-react-native';
 import Checkout from './components/Checkout';
 import {styles} from './styles';
 import Bill from './components/Bill';
-import {REACT_APP_STRIPE_PUBLISHABLE_KEY} from '@env';
+import {payActions} from '../../actions/payActions';
+import {ActivityIndicator} from 'react-native';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Payment'>;
 
+export interface SecretClientProps {
+  id: string;
+  client_secret: string;
+  ephemeralKey: string;
+  customer: string;
+}
+
 const Payment = ({route, navigation}: Props) => {
+  const {payData} = route.params;
+  const [loading, setLoading] = useState(true);
+  const [secretClient, setSecretClient] = useState<SecretClientProps>({
+    id: '',
+    client_secret: '',
+    ephemeralKey: '',
+    customer: '',
+  });
+
+  useEffect(() => {
+    setLoading(true);
+    const secretClient = async () => {
+      try {
+        const data = await payActions.payment(payData.amount);
+        setSecretClient(data);
+      } catch (error) {
+        return false;
+      } finally {
+        setLoading(false);
+      }
+    };
+    secretClient();
+  }, []);
   return (
-    <StripeProvider
-      publishableKey={REACT_APP_STRIPE_PUBLISHABLE_KEY}
-      merchantIdentifier="merchant.identifier"
-      urlScheme="your-url-scheme">
-      <View style={styles.container}>
-        <Header
-          barStyle="dark-content"
-          backgroundColor="transparent"
-          leftComponent={
-            <Icon
-              name="arrow-back-ios"
-              color={mainColor}
-              onPress={() => navigation.goBack()}
-              size={28}
-            />
-          }
-          centerComponent={
-            <Text
-              style={{
-                fontSize: 22,
-                fontWeight: '600',
-              }}>
-              Thanh toán
-            </Text>
-          }
-          rightComponent={
-            <Icon
-              name="home"
-              color={mainColor}
-              onPress={() => navigation.navigate('HomeTab')}
-              size={28}
-            />
-          }
-        />
+    <View style={styles.container}>
+      <Header
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        leftComponent={
+          <Icon
+            name="arrow-back-ios"
+            color={mainColor}
+            onPress={() => navigation.goBack()}
+            size={28}
+          />
+        }
+        centerComponent={
+          <Text
+            style={{
+              fontSize: 22,
+              fontWeight: '600',
+            }}>
+            Thanh toán
+          </Text>
+        }
+        rightComponent={
+          <Icon
+            name="home"
+            color={mainColor}
+            onPress={() => navigation.navigate('HomeTab')}
+            size={28}
+          />
+        }
+      />
 
-        <Bill {...route.params} />
+      <Bill {...route.params} />
 
-        <Checkout {...route.params} />
-      </View>
-    </StripeProvider>
+      {loading ? (
+        <ActivityIndicator color={mainColor} />
+      ) : (
+        <Checkout {...route.params} secretClient={secretClient} />
+      )}
+    </View>
   );
 };
 
