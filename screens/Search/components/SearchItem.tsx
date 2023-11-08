@@ -28,7 +28,9 @@ const SearchItem = (product: ProductType) => {
           <Text>({product.comments.length})</Text>
         </View>
       </View>
-      <Text style={styles.price}>{moneyFormat(product.lastPrice)}</Text>
+      <Text style={styles.price}>
+        {moneyFormat(product.lastPrice)}/{product.unit}
+      </Text>
     </TouchableOpacity>
   );
 };

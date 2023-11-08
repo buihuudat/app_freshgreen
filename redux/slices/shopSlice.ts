@@ -47,13 +47,23 @@ export const shopSlice = createSlice({
         state.shop = action.payload;
       })
       .addMatcher(
-        isAnyOf(shopActions.updateFollow.pending),
+        isAnyOf(
+          shopActions.updateFollow.pending,
+          shopActions.updateFollow.rejected,
+        ),
         (state, action) => {
           const userId = action.meta.arg.userId;
+          const shopFollowers = state.shop.followers || [];
+          const shopIndex = shopFollowers.indexOf(userId);
+
           if (action.type === shopActions.updateFollow.pending.type) {
-            state.shop.followers?.push(userId);
+            if (shopIndex === -1) {
+              state.shop.followers = [...shopFollowers, userId];
+            } else {
+              state.shop.followers = shopFollowers.filter(fl => fl !== userId);
+            }
           } else {
-            state.shop.followers?.filter(user => user !== userId);
+            state.shop.followers = shopFollowers.filter(fl => fl !== userId);
           }
         },
       )

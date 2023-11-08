@@ -13,6 +13,9 @@ interface InitialStateProps {
   popular: Array<ProductType>;
   productsView: Array<ProductType>;
   bestSeller: Array<ProductType>;
+  ratedHighest: Array<ProductType>;
+  biggestDiscount: Array<ProductType>;
+  newProducts: Array<ProductType>;
   shopProducts: {
     products: ProductType[];
     totalProducts: number;
@@ -33,6 +36,9 @@ const initialState: InitialStateProps = {
   popular: [],
   productsView: [],
   bestSeller: [],
+  newProducts: [],
+  ratedHighest: [],
+  biggestDiscount: [],
   shopProducts: {products: [], totalProducts: 0},
   totalProducts: 0,
   loading: false,
@@ -81,17 +87,32 @@ export const productSlice = createSlice({
       .addCase(productActions.getShopProducts.fulfilled, (state, action) => {
         state.shopProducts = action.payload;
       })
-      .addCase(productActions.updateProductView.fulfilled, (state, action) => {
-        if (!action.payload) return;
-        const indexProduct = state.products.findIndex(
-          product => product._id === action.meta.arg,
-        );
-        const currentProduct = state.products[indexProduct];
-        state.products[indexProduct] = {
-          ...currentProduct,
-          views: currentProduct.views + 1,
-        };
+      .addCase(
+        productActions.getBiggestDiscountProducts.fulfilled,
+        (state, action) => {
+          state.biggestDiscount = action.payload;
+        },
+      )
+      .addCase(productActions.newProducts.fulfilled, (state, action) => {
+        state.newProducts = action.payload;
       })
+      .addCase(
+        productActions.ratedHighestProducts.fulfilled,
+        (state, action) => {
+          state.ratedHighest = action.payload;
+        },
+      )
+      // .addCase(productActions.updateProductView.fulfilled, (state, action) => {
+      //   if (!action.payload) return;
+      //   const indexProduct = state.products.findIndex(
+      //     product => product._id === action.meta.arg,
+      //   );
+      //   const currentProduct = state.products[indexProduct];
+      //   state.products[indexProduct] = {
+      //     ...currentProduct,
+      //     views: currentProduct.views + 1,
+      //   };
+      // })
       .addMatcher<PendingAction>(
         action => action.type.endsWith('/pending'),
         state => {

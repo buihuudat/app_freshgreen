@@ -49,10 +49,10 @@ const CartItem = memo((product: ProductCartType) => {
           <Icon onPress={handleDelete} name="highlight-off" color={'red'} />
         </View>
 
-        <Text>{product.shop?.name || 'Amonius'} </Text>
-
         <View style={styles.viewPrice}>
-          <Text style={styles.price}>{moneyFormat(product.lastPrice)}</Text>
+          <Text style={styles.price}>
+            {moneyFormat(product.lastPrice)}/{product.unit}
+          </Text>
           <View style={styles.upDown}>
             <TouchableOpacity onPress={handleRemove}>
               <Icon name="remove-circle-outline" color={mainColor} />

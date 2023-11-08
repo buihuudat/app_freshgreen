@@ -7,8 +7,9 @@ import {
   ImageBackground,
   ActivityIndicator,
   StatusBar,
+  PermissionsAndroid,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Banner2, Logo, SplashImage} from '../constants/images';
 import {black, mainColor} from '../constants/colors';
 import {useAppDispatch} from '../redux/hooks';
@@ -17,6 +18,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../routes';
 import {checkAuth} from '../utils/handlers/checkAuth';
 import {appData} from '../utils/handlers/appData';
+import {getToken} from '../utils/handlers/pushNotification';
 
 export default function Splash() {
   const [loading, setLoading] = useState(true);
@@ -35,6 +37,13 @@ export default function Splash() {
       fetchAppData();
     }, []),
   );
+
+  useEffect(() => {
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+    );
+    getToken();
+  }, []);
 
   return (
     <SafeAreaView>

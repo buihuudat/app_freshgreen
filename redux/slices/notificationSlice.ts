@@ -19,21 +19,19 @@ const initialState: InitialProps = {
 const notificationSlice = createSlice({
   name: 'notification',
   initialState,
-  reducers: {
-    updateSeen: (state, action) => {
-      const notificationUpdated = [...state.notifications];
-      notificationUpdated.map(noti => {
-        if (noti._id === action.payload) {
-          noti.seen = true;
-        }
-      });
-      state.notifications = notificationUpdated;
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(notificationActions.gets.fulfilled, (state, action) => {
-        state.notifications = {...action.payload, seen: false};
+      .addCase(notificationActions.get.fulfilled, (state, action) => {
+        state.notifications = action.payload;
+      })
+      .addCase(notificationActions.seen.fulfilled, (state, action) => {
+        if (!action.payload) return;
+        const notificationIndex = state.notifications.findIndex(
+          notification => notification._id === action.meta.arg,
+        );
+        if (notificationIndex !== -1)
+          state.notifications[notificationIndex].seen = true;
       })
       .addMatcher<PendingAction>(
         action => action.type.endsWith('/pending'),
@@ -51,5 +49,4 @@ const notificationSlice = createSlice({
       );
   },
 });
-export const {updateSeen} = notificationSlice.actions;
 export default notificationSlice.reducer;

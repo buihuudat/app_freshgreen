@@ -40,7 +40,7 @@ export default HomeSale;
 
 const styles = StyleSheet.create({
   container: {
-    height: 500,
+    height: 400,
   },
   title: {
     fontSize: 30,

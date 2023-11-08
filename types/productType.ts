@@ -23,6 +23,7 @@ export interface ProductType {
   description: string;
   price: number;
   lastPrice: number;
+  unit: string;
   discount: number;
   sold?: number;
   category: string;
@@ -47,6 +48,7 @@ export const InitialProduct: ProductType = {
   lastPrice: 0,
   discount: 0,
   sold: 0,
+  unit: '',
   views: 0,
   averageStarRating: 0,
   category: '',

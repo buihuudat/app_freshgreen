@@ -3,7 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {TransitionSpecs, createStackNavigator} from '@react-navigation/stack';
 import {RootStackParamList} from './routes';
 import BottomTabs from './components/BottomTabs';
-import {ActivityIndicator, Alert} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import {ThemeProvider, createTheme, lightColors} from '@rneui/themed';
 import {Provider} from 'react-redux';
 import {store} from './redux/store';
@@ -15,6 +15,7 @@ import {toastConfig} from './components/toastConfig';
 import {getToken, pushNotification} from './utils/handlers/pushNotification';
 import 'react-native-gesture-handler';
 import 'moment/locale/vi';
+import {socket} from './utils/handlers/socketConnect';
 
 const LazyHome = lazy(() => import('./screens/Home'));
 const LazyProductDetails = lazy(() => import('./screens/ProductDetails'));
@@ -42,12 +43,6 @@ const LazyLoginWithSMS = lazy(() => import('./screens/auth/LoginWithSMS'));
 const RootStack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
-  useEffect(() => {
-    PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-    );
-    getToken();
-  }, []);
   pushNotification();
 
   const theme = createTheme({

@@ -28,7 +28,9 @@ const OrderProductItem = (product: ProductCartType) => {
         <Text style={styles.orderProductItemTitle}>{product.title}</Text>
         <View style={styles.quantityPrice}>
           <Text>Số lượng: {product.count}</Text>
-          <Text style={styles.textPrice}>{moneyFormat(product.lastPrice)}</Text>
+          <Text style={styles.textPrice}>
+            {moneyFormat(product.lastPrice)}/{product.unit}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

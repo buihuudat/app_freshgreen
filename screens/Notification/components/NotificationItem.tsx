@@ -9,7 +9,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../routes';
 import {NotificationType} from '../../../types/NotificationType';
 import {useAppDispatch} from '../../../redux/hooks';
-import {updateSeen} from '../../../redux/slices/notificationSlice';
+import {notificationActions} from '../../../actions/notificationActions';
 
 const NotificationItem = memo((notification: NotificationType) => {
   const navigaiton =
@@ -29,8 +29,10 @@ const NotificationItem = memo((notification: NotificationType) => {
       ? notification.path[0]
       : notification.path;
     navigaiton.navigate(screenName);
-    dispatch(updateSeen(notification._id!));
+    dispatch(notificationActions.seen(notification._id!));
   };
+
+  console.log(notification);
 
   return (
     <TouchableOpacity

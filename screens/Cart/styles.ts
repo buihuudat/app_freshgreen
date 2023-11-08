@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
   cartItem: {
     display: 'flex',
     flexDirection: 'row',
-    gap: 20,
+    gap: 10,
     padding: 10,
     paddingBottom: 20,
   },
@@ -43,8 +43,8 @@ export const styles = StyleSheet.create({
   },
   productTitle: {
     fontWeight: '700',
-    fontSize: 20,
-    width: '60%',
+    fontSize: 18,
+    width: '65%',
     color: black,
   },
 

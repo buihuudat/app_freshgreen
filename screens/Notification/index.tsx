@@ -1,6 +1,6 @@
 import {View, FlatList, Text, RefreshControl} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {Header, Icon} from '@rneui/themed';
+import {Header, Icon, LinearProgress} from '@rneui/themed';
 import {mainColor} from '../../constants/colors';
 import {useNavigation} from '@react-navigation/native';
 import NotificationItem from './components/NotificationItem';
@@ -11,15 +11,20 @@ import {notificationActions} from '../../actions/notificationActions';
 const Notification = () => {
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const notifications = useAppSelector(
     (state: RootState) => state.notification.notifications,
   );
 
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state: RootState) => state.user.user);
 
   const fetchNotification = async () => {
     setRefreshing(true);
-    await dispatch(notificationActions.gets()).then(() => setRefreshing(false));
+    await dispatch(notificationActions.get(user?._id!)).then(() => {
+      setRefreshing(false);
+      setIsLoading(false);
+    });
   };
 
   useEffect(() => {
@@ -43,6 +48,7 @@ const Notification = () => {
           />
         }
       />
+      {isLoading && <LinearProgress color={mainColor} />}
       <View>
         {notifications.length ? (
           <FlatList

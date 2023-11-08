@@ -62,7 +62,9 @@ const ProductItem = (product: ProductType) => {
             <Rating imageSize={18} startingValue={product.averageStarRating} />
             <Text>({product.comments.length})</Text>
           </View>
-          <Text style={styles.price}>{moneyFormat(product.lastPrice)}</Text>
+          <Text style={styles.price}>
+            {moneyFormat(product.lastPrice)}/{product.unit}
+          </Text>
         </View>
         <View style={styles.contentItem}>
           <Icon

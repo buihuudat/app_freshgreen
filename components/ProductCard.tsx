@@ -78,7 +78,9 @@ const ProductCard = memo((props: Props) => {
           imageSize={15}
         />
 
-        <Text style={styles.price}>{moneyFormat(product.lastPrice)}</Text>
+        <Text style={styles.price}>
+          {moneyFormat(product.lastPrice)}/{product.unit}
+        </Text>
       </TouchableOpacity>
 
       <View style={styles.add}>

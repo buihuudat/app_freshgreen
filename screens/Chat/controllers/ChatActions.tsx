@@ -1,5 +1,5 @@
 import {View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {styles} from '../styles';
 import {Icon, Input} from '@rneui/themed';
 import {mainColor} from '../../../constants/colors';
@@ -11,17 +11,8 @@ import {messageActions} from '../../../actions/messageActions';
 const ChatActions = (receiver: FromType) => {
   const [text, setText] = useState('');
   const user = useAppSelector((state: RootState) => state.user.user);
-  const messages = useAppSelector(
-    (state: RootState) => state.messages.messages,
-  );
-
-  console.log(messages);
 
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(messageActions.get({from: user?._id!, to: receiver._id}));
-  }, []);
 
   const handleSendMessage = () => {
     const data = {
@@ -32,6 +23,7 @@ const ChatActions = (receiver: FromType) => {
       },
     };
     dispatch(messageActions.send(data));
+    setText('');
   };
 
   return (
@@ -40,6 +32,7 @@ const ChatActions = (receiver: FromType) => {
         <Icon name="add" color={mainColor} />
         <Input
           onChangeText={setText}
+          value={text}
           autoFocus
           placeholder="Viết tin nhắn..."
           containerStyle={styles.inputAction}

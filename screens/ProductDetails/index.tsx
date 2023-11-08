@@ -10,7 +10,7 @@ import React, {memo, useCallback, useEffect, useState} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../routes';
 import {styles} from './styles';
-import {Header, Icon} from '@rneui/themed';
+import {Header, Icon, Skeleton} from '@rneui/themed';
 import {mainColor} from '../../constants/colors';
 import Swiper from 'react-native-swiper';
 import {Rating} from 'react-native-ratings';
@@ -100,7 +100,80 @@ const ProductDetails = memo(({route, navigation}: Props) => {
       />
 
       {isLoading ? (
-        <ActivityIndicator />
+        <View style={{flex: 1, padding: 16}}>
+          <ScrollView style={{flex: 1}}>
+            <Skeleton
+              animation="wave"
+              height={400}
+              style={{marginBottom: 16}}
+            />
+            <Skeleton animation="wave" height={20} style={{marginBottom: 16}} />
+            <Skeleton
+              animation="wave"
+              width={300}
+              height={20}
+              style={{marginBottom: 16}}
+            />
+
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Skeleton
+                animation="wave"
+                width={100}
+                height={30}
+                style={{marginBottom: 16}}
+              />
+              <Skeleton
+                animation="wave"
+                width={100}
+                height={30}
+                style={{marginBottom: 16}}
+              />
+            </View>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Skeleton
+                animation="wave"
+                width={150}
+                height={40}
+                style={{marginBottom: 16}}
+              />
+              <Skeleton
+                animation="wave"
+                width={80}
+                height={40}
+                style={{marginBottom: 16}}
+              />
+            </View>
+
+            <Skeleton
+              animation="wave"
+              width={250}
+              height={20}
+              style={{marginBottom: 16}}
+            />
+            <Skeleton
+              animation="wave"
+              width={200}
+              height={20}
+              style={{marginBottom: 16}}
+            />
+            <Skeleton
+              animation="wave"
+              width={300}
+              height={20}
+              style={{marginBottom: 16}}
+            />
+          </ScrollView>
+        </View>
       ) : (
         <View style={{flex: 1}}>
           <ScrollView
@@ -156,7 +229,7 @@ const ProductDetails = memo(({route, navigation}: Props) => {
 
               <View style={styles.viewPriceCount}>
                 <Text style={styles.price}>
-                  {moneyFormat(product.lastPrice)}
+                  {moneyFormat(product.lastPrice)}/{product.unit}
                 </Text>
 
                 <View style={styles.upDown}>

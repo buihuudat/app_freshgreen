@@ -1,7 +1,9 @@
 import axiosClient from './axiosClient';
 
 export const notificationApi = {
-  gets: () => axiosClient.get('/notifications'),
+  get: (userId: string) => axiosClient.get(`/notifications/${userId}`),
+  seen: (notificationId: string) =>
+    axiosClient.put(`/notifications/${notificationId}/seen`),
   pushToken: ({
     token,
     id,

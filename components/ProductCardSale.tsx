@@ -1,15 +1,17 @@
 import {View, Text, StyleSheet, ImageBackground} from 'react-native';
-import React, {memo, useEffect, useState} from 'react';
+import React, {memo, useState} from 'react';
 import {ProductType} from '../types/productType';
 import {Button, Card, Icon} from '@rneui/themed';
 import {Rating} from 'react-native-ratings';
 import {moneyFormat} from '../utils/handlers/moneyFormat';
 import {mainColor} from '../constants/colors';
-import moment from 'moment';
 import {useAppDispatch, useAppSelector} from '../redux/hooks';
 import {RootState} from '../redux/store';
 import {cartActions} from '../actions/cartActions';
 import Toast from 'react-native-toast-message';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../routes';
 
 interface Props {
   product: ProductType;
@@ -27,6 +29,8 @@ const ProductCardSale = memo((product: ProductType) => {
 
   const user = useAppSelector((state: RootState) => state.user.user);
   const dispatch = useAppDispatch();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const handleAddProduct = () => {
     if (!user) return Toast.show({type: 'error', text1: 'Bạn chưa đăng nhập'});
@@ -36,6 +40,10 @@ const ProductCardSale = memo((product: ProductType) => {
         product: {...product, count: 1},
       }),
     );
+  };
+
+  const handleViewProduct = () => {
+    navigation.navigate('ProductDetail', {product});
   };
 
   // var countDownDate = moment('10-26-2023 +0000', 'MM-DD-YYYY Z').valueOf();
@@ -82,7 +90,9 @@ const ProductCardSale = memo((product: ProductType) => {
           </View>
 
           <Card containerStyle={styles.contentInfo}>
-            <Card.Title style={styles.contentInfoTitle}>
+            <Card.Title
+              style={styles.contentInfoTitle}
+              onPress={handleViewProduct}>
               {product.title}
             </Card.Title>
             <Rating
@@ -91,7 +101,9 @@ const ProductCardSale = memo((product: ProductType) => {
               readonly
             />
 
-            <Text style={styles.price}>{moneyFormat(product.lastPrice)}</Text>
+            <Text style={styles.price}>
+              {moneyFormat(product.lastPrice)}/{product.unit}
+            </Text>
 
             <Button color={mainColor} onPress={handleAddProduct}>
               Thêm vào giỏ hàng{' '}
@@ -113,7 +125,6 @@ const styles = StyleSheet.create({
     height: 200,
   },
   image: {
-    width: 'auto',
     height: '100%',
     resizeMode: 'cover',
   },

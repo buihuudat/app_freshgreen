@@ -25,13 +25,13 @@ const Tab = createMaterialTopTabNavigator();
 
 export default function StoreDetails({route, navigation}: Props) {
   const {storeId} = route.params;
-  const {shop, loading} = useAppSelector((state: RootState) => state.shop);
+  const {shop} = useAppSelector((state: RootState) => state.shop);
   const user = useAppSelector((state: RootState) => state.user.user);
   const [isLoading, setIsLoading] = useState(true);
 
   const [visible, setVisible] = useState(false);
 
-  const isFollowing = false;
+  const isFollowing = shop.followers?.findIndex(fl => fl === user?._id!) !== -1;
   const dispatch = useAppDispatch();
 
   useEffect(() => {

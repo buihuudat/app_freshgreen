@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {Avatar, Icon} from '@rneui/themed';
 import {mainColor} from '../constants/colors';
@@ -8,8 +8,11 @@ import Account from '../screens/Account';
 import Store from '../screens/Store';
 import News from '../screens/News';
 import Notification from '../screens/Notification';
-import {useAppSelector} from '../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../redux/hooks';
 import {RootState} from '../redux/store';
+import {UserImage} from '../constants/images';
+import {socket} from '../utils/handlers/socketConnect';
+import {messageActions} from '../actions/messageActions';
 
 const Tab = createMaterialBottomTabNavigator();
 const iconSize = 28;
@@ -17,8 +20,23 @@ const iconSize = 28;
 export default function BottomTabs() {
   const notificationCount = useAppSelector(
     (state: RootState) => state.notification.notifications,
-  ).length;
+  ).filter(n => n.seen === false).length;
   const user = useAppSelector((state: RootState) => state.user.user);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    socket.on('message-recieve', data => {
+      user &&
+        dispatch(
+          messageActions.get({
+            from: data.from,
+            to: data.to,
+          }),
+        );
+    });
+  }, []);
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -90,7 +108,11 @@ export default function BottomTabs() {
           tabBarLabel: 'Tài khoản',
           tabBarIcon: ({color}) =>
             user ? (
-              <Avatar size={iconSize} rounded source={{uri: user.avatar}} />
+              <Avatar
+                size={iconSize}
+                rounded
+                source={user.avatar === '' ? UserImage : {uri: user.avatar}}
+              />
             ) : (
               <Icon name="account-circle" color={color} size={iconSize} />
             ),

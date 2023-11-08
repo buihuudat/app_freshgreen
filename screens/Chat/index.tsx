@@ -1,5 +1,5 @@
-import {View, Text, TouchableOpacity} from 'react-native';
-import React from 'react';
+import {View, Text, TouchableOpacity, FlatList} from 'react-native';
+import React, {useEffect, useRef} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../routes';
 import {Header, Icon, Image} from '@rneui/themed';
@@ -7,12 +7,29 @@ import {error, mainColor} from '../../constants/colors';
 import {Store} from '../../constants/images';
 import {styles} from './styles';
 import ChatActions from './controllers/ChatActions';
+import {useAppSelector} from '../../redux/hooks';
+import {RootState} from '../../redux/store';
+import MessageItem from './controllers/MessageItem';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Chat'>;
 
 const ChatScreen = ({route, navigation}: Props) => {
   const receiver = route.params.from;
   const avatarReceiver = receiver.avatar ? {uri: receiver.avatar} : Store;
+
+  const flatListRef = useRef<FlatList | null>(null);
+  const {userChat, loading} = useAppSelector(
+    (state: RootState) => state.messages,
+  );
+  const scrollToBottom = () => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({animated: true});
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [userChat]);
 
   const handleViewReciever = () => {
     navigation.goBack();
@@ -42,6 +59,17 @@ const ChatScreen = ({route, navigation}: Props) => {
           <Icon name="report" color={error} onPress={handleRepost} />
         }
       />
+      <View style={{flex: 1}}>
+        <FlatList
+          style={{marginBottom: 40}}
+          ref={ref => (flatListRef.current = ref)}
+          data={userChat}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item}) => <MessageItem {...item} />}
+          onContentSizeChange={scrollToBottom}
+          onLayout={scrollToBottom}
+        />
+      </View>
       <ChatActions {...receiver} />
     </View>
   );

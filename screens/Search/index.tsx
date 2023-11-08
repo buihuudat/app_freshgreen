@@ -6,26 +6,31 @@ import {useNavigation} from '@react-navigation/native';
 import {styles} from './styles';
 import SearchItem from './components/SearchItem';
 import {ProductType} from '../../types/productType';
-import {useAppSelector} from '../../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {RootState} from '../../redux/store';
+import {productActions} from '../../actions/productActions';
 
 const Search = () => {
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState('');
   const [productsResearch, setProductsResearch] = useState<Array<ProductType>>(
     [],
   );
 
-  const products = useAppSelector((state: RootState) => state.product.products);
+  const [isLoading, setIsLoading] = useState(false);
+  const searchProduct = async () => {
+    setIsLoading(true);
+    await dispatch(productActions.searchProducts(searchQuery))
+      .unwrap()
+      .then(data => setProductsResearch(data))
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   useEffect(() => {
-    const rs =
-      searchQuery === ''
-        ? []
-        : products.filter(product =>
-            product.title.toLowerCase().includes(searchQuery.toLowerCase()),
-          );
-    setProductsResearch(rs ?? []);
+    searchProduct();
   }, [searchQuery]);
 
   return (
@@ -55,11 +60,15 @@ const Search = () => {
       />
 
       <View>
-        <FlatList
-          keyExtractor={item => item._id!}
-          data={productsResearch}
-          renderItem={({item}) => <SearchItem {...item} />}
-        />
+        {isLoading ? (
+          <ActivityIndicator color={mainColor} />
+        ) : (
+          <FlatList
+            keyExtractor={item => item._id!}
+            data={productsResearch}
+            renderItem={({item}) => <SearchItem {...item} />}
+          />
+        )}
       </View>
     </View>
   );

@@ -42,7 +42,7 @@ const Categories = () => {
         contentContainerStyle={styles.categoriesList}
         data={categoriesUpdated}
         keyExtractor={item => item._id!}
-        renderItem={({item}) => <CategoryItem category={item} size={100} />}
+        renderItem={({item}) => <CategoryItem category={item} size={120} />}
       />
     </View>
   );

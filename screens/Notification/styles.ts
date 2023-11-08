@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 export const styles = StyleSheet.create({
   notificationIcon: {
     padding: 10,
-    margin: 15,
+    margin: 10,
     borderRadius: 10,
     backgroundColor: 'white',
     display: 'flex',

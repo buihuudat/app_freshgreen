@@ -64,6 +64,36 @@ export const productActions = {
     }
   }),
 
+  newProducts: createAsyncThunk('product/new', async () => {
+    try {
+      const res = await productApi.getNewProducts();
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }),
+
+  ratedHighestProducts: createAsyncThunk('product/rated-hightest', async () => {
+    try {
+      const res = await productApi.getProductsRatedHighest();
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }),
+
+  getBiggestDiscountProducts: createAsyncThunk(
+    'product/biggest-discount',
+    async () => {
+      try {
+        const res = await productApi.getBiggestDiscountProducts();
+        return res.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+  ),
+
   searchProducts: createAsyncThunk(
     'product/search',
     async (searchQuery: string) => {

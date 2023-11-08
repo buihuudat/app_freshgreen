@@ -9,7 +9,7 @@ export const cartActions = {
     try {
       const res = await cartApi.getCart(userId);
       // await dataStorage.setItem('cart', res.data);
-      socket.emit('create-order', res.data);
+      // socket.emit('create-order', res.data);
       return res.data;
     } catch (error) {
       throw error;

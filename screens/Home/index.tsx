@@ -13,6 +13,7 @@ import HomeCategory from './components/HomeCategory';
 import {settingsActions} from '../../actions/settingsActionts';
 import {categoryActions} from '../../actions/categoryActions';
 import {mainColor} from '../../constants/colors';
+import HomeList from './components/HomeList';
 
 export default function Home() {
   const {popular, bestSeller, productsView} = useAppSelector(
@@ -33,7 +34,9 @@ export default function Home() {
         dispatch(settingsActions.getBanner()),
         dispatch(categoryActions.gets()),
         dispatch(productActions.bestSeller()),
-        dispatch(productActions.popular()),
+        dispatch(productActions.newProducts()),
+        dispatch(productActions.ratedHighestProducts()),
+        dispatch(productActions.getBiggestDiscountProducts()),
         dispatch(productActions.getProductsView()),
       ]);
     } catch (error) {
@@ -61,11 +64,13 @@ export default function Home() {
 
         <HomeCategory categories={categories} />
 
-        <HomeProducts products={productsView} />
+        <HomeProducts products={popular} />
 
-        <BestSellers products={popular} />
+        <BestSellers products={bestSeller} />
 
-        <HomeSale products={bestSeller} />
+        <HomeSale products={productsView} />
+
+        <HomeList />
       </ScrollView>
     </View>
   );
