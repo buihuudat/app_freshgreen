@@ -18,7 +18,7 @@ const ChatScreen = ({route, navigation}: Props) => {
   const avatarReceiver = receiver.avatar ? {uri: receiver.avatar} : Store;
 
   const flatListRef = useRef<FlatList | null>(null);
-  const {userChat, loading} = useAppSelector(
+  const {userChat, loading, aiChat} = useAppSelector(
     (state: RootState) => state.messages,
   );
   const scrollToBottom = () => {
@@ -63,14 +63,15 @@ const ChatScreen = ({route, navigation}: Props) => {
         <FlatList
           style={{marginBottom: 40}}
           ref={ref => (flatListRef.current = ref)}
-          data={userChat}
+          data={receiver._id === 'AI' ? aiChat : userChat}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => <MessageItem {...item} />}
           onContentSizeChange={scrollToBottom}
           onLayout={scrollToBottom}
         />
       </View>
-      <ChatActions {...receiver} />
+
+      <ChatActions loading={loading} receiver={receiver} />
     </View>
   );
 };

@@ -5,7 +5,6 @@ import {mainColor} from '../../constants/colors';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../routes';
-import {AI} from '../../constants/images';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {messageActions} from '../../actions/messageActions';
 import {RootState} from '../../redux/store';
@@ -34,6 +33,17 @@ const Message = () => {
       });
   };
 
+  const handleAskAI = () => {
+    navigation.navigate('Chat', {
+      from: {
+        _id: 'AI',
+        fullname: 'AI',
+        avatar:
+          'https://e7.pngegg.com/pngimages/312/145/png-clipart-chef-illustration-chef-cooking-cooking-kitchen-food-thumbnail.png',
+      },
+    });
+  };
+
   return (
     <View>
       <Header
@@ -50,6 +60,7 @@ const Message = () => {
       <View
         style={{padding: 5, display: 'flex', flexDirection: 'column', gap: 15}}>
         <TouchableOpacity
+          onPress={handleAskAI}
           style={{
             width: '100%',
             display: 'flex',
@@ -57,7 +68,9 @@ const Message = () => {
             padding: 1,
           }}>
           <Image
-            source={AI}
+            source={{
+              uri: 'https://e7.pngegg.com/pngimages/312/145/png-clipart-chef-illustration-chef-cooking-cooking-kitchen-food-thumbnail.png',
+            }}
             style={{width: 50, height: 50, resizeMode: 'cover'}}
           />
           <View>

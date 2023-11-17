@@ -15,7 +15,6 @@ import {toastConfig} from './components/toastConfig';
 import {getToken, pushNotification} from './utils/handlers/pushNotification';
 import 'react-native-gesture-handler';
 import 'moment/locale/vi';
-import {socket} from './utils/handlers/socketConnect';
 
 const LazyHome = lazy(() => import('./screens/Home'));
 const LazyProductDetails = lazy(() => import('./screens/ProductDetails'));
@@ -39,11 +38,19 @@ const LazyOrderManager = lazy(() => import('./screens/OrderManager'));
 const LazyRegister = lazy(() => import('./screens/auth/Register'));
 const LazyLogin = lazy(() => import('./screens/auth/Login'));
 const LazyLoginWithSMS = lazy(() => import('./screens/auth/LoginWithSMS'));
+const LazyForgotPassword = lazy(() => import('./screens/auth/ForgotPassword'));
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   pushNotification();
+
+  useEffect(() => {
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+    );
+    getToken();
+  }, []);
 
   const theme = createTheme({
     lightColors: {
@@ -143,6 +150,10 @@ export default function App() {
                 />
                 <RootStack.Screen name="Register" component={LazyRegister} />
                 <RootStack.Screen name="Login" component={LazyLogin} />
+                <RootStack.Screen
+                  name="ForgotPassword"
+                  component={LazyForgotPassword}
+                />
                 <RootStack.Screen
                   name="LoginWithSMS"
                   component={LazyLoginWithSMS}

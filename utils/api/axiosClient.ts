@@ -9,7 +9,10 @@ let IP = '192.168.1.8';
 
 const PORT = 5000;
 export const host = `http://${IP}:${PORT}`;
+
+// export const host = 'https://server.freshgreen.io.vn';
 const baseURL = `http://${IP}:${PORT}/api/v1`;
+// const baseURL = 'https://server.freshgreen.io.vn/api/v1';
 
 const axiosClient = axios.create({
   baseURL,

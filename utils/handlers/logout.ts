@@ -5,6 +5,7 @@ import {userLogout} from '../../redux/slices/userSlice';
 import {clearCart} from '../../redux/slices/cartSlice';
 import {clearCartOrder} from '../../redux/slices/orderSlice';
 import {clearFavorite} from '../../redux/slices/favoriteSlice';
+import {clearNotifications} from '../../redux/slices/notificationSlice';
 
 export const logout = async (dispatch: Dispatch<AnyAction>) => {
   const promises = [
@@ -18,6 +19,7 @@ export const logout = async (dispatch: Dispatch<AnyAction>) => {
   dispatch(clearCart());
   dispatch(clearCartOrder());
   dispatch(clearFavorite());
+  dispatch(clearNotifications());
 
   await Promise.allSettled(promises);
 

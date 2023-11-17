@@ -37,7 +37,7 @@ const MessageItem = (props: {fromSelf: boolean; message: string}) => {
         source={avatar}
         style={{width: 40, height: 40, resizeMode: 'cover'}}
       />
-      <View style={{width: '100%'}}>
+      <View style={{width: '100%', flex: 1}}>
         <Text
           style={{
             fontSize: 18,

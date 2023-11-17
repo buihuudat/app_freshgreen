@@ -1,3 +1,5 @@
+import {UserType} from './userType';
+
 export interface MessageType {
   sender: string;
   recipient: string;
@@ -6,6 +8,7 @@ export interface MessageType {
 }
 
 export interface SendType {
+  user: UserType;
   from: string;
   to: string;
   message: {

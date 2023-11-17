@@ -174,6 +174,7 @@ export const styles = StyleSheet.create({
     backgroundColor: mainColor,
     borderRadius: 50,
     padding: 15,
+    paddingHorizontal: 20,
   },
 
   actionText: {

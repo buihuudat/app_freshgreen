@@ -26,15 +26,15 @@ export default function BottomTabs() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    socket.on('message-recieve', data => {
-      user &&
+    user &&
+      socket.on('message-recieve', data => {
         dispatch(
           messageActions.get({
-            from: data.from,
-            to: data.to,
+            from: user._id!,
+            to: user._id! !== data.from ? data.to : data.from,
           }),
         );
-    });
+      });
   }, []);
 
   return (

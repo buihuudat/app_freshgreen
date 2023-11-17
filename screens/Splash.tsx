@@ -38,13 +38,6 @@ export default function Splash() {
     }, []),
   );
 
-  useEffect(() => {
-    PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-    );
-    getToken();
-  }, []);
-
   return (
     <SafeAreaView>
       <StatusBar

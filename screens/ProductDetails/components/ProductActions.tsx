@@ -64,13 +64,13 @@ const ProductActions = memo((props: Props) => {
     <View style={styles.productActions}>
       <View style={styles.actionsContent}>
         <View>
-          <Icon
+          {/* <Icon
             onPress={handleCompare}
             style={{...styles.iconReviews, backgroundColor: '#A5D9EC'}}
             color={'white'}
             name="compare"
             disabled={!isArrayValid}
-          />
+          /> */}
           {product.comments.length > 0 && (
             <Badge
               status="primary"

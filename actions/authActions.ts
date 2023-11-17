@@ -71,19 +71,18 @@ export const authActions = {
     }
   }),
 
-  resetPassword: createAsyncThunk<
-    any,
-    {email: string; password: string; confirmPassword: string}
-  >('user/reset-password', async ({email, password, confirmPassword}) => {
-    try {
-      const res = await authAPI.resetPassword({
-        email,
-        password,
-        confirmPassword,
-      });
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  }),
+  resetPassword: createAsyncThunk<any, {email: string}>(
+    'user/reset-password',
+    async ({email}, thunkAPI) => {
+      try {
+        const res = await authAPI.resetPassword({
+          email,
+        });
+        return res.data;
+      } catch (error: any) {
+        if (error.data) return thunkAPI.rejectWithValue(error.data);
+        throw error;
+      }
+    },
+  ),
 };

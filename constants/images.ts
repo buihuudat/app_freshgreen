@@ -12,4 +12,3 @@ export const Delivery = require('../resources/images/delivery.png');
 export const Store = require('../resources/images/storeImage.png');
 export const Notification = require('../resources/images/notification.png');
 export const Category = require('../resources/images/category.png');
-export const AI = require('../resources/images/AI.png');
