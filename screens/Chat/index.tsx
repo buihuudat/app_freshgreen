@@ -65,7 +65,9 @@ const ChatScreen = ({route, navigation}: Props) => {
           ref={ref => (flatListRef.current = ref)}
           data={receiver._id === 'AI' ? aiChat : userChat}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => <MessageItem {...item} />}
+          renderItem={({item}) => (
+            <MessageItem {...item} AI={receiver._id === 'AI'} />
+          )}
           onContentSizeChange={scrollToBottom}
           onLayout={scrollToBottom}
         />

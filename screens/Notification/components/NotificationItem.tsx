@@ -10,11 +10,13 @@ import {RootStackParamList} from '../../../routes';
 import {NotificationType} from '../../../types/NotificationType';
 import {useAppDispatch} from '../../../redux/hooks';
 import {notificationActions} from '../../../actions/notificationActions';
+import moment from 'moment';
 
 const NotificationItem = memo((notification: NotificationType) => {
   const navigaiton =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
+  const time = moment(notification.createdAt).format('MMMM D, YYYY h:mm:ss a');
 
   const image = useMemo(() => {
     if (typeof notification.auth !== 'string' && notification.auth?.avatar) {
@@ -32,8 +34,6 @@ const NotificationItem = memo((notification: NotificationType) => {
     dispatch(notificationActions.seen(notification._id!));
   };
 
-  console.log(notification);
-
   return (
     <TouchableOpacity
       onPress={handleSeen}
@@ -44,7 +44,7 @@ const NotificationItem = memo((notification: NotificationType) => {
         borderWidth: notification.seen ? 0 : 1,
         borderColor: notification.seen ? '#fff' : mainColor,
       }}>
-      <Text style={styles.date}>{notification.createdAt}</Text>
+      <Text style={styles.date}>{time}</Text>
       <Image source={image} style={styles.image} />
       <View style={styles.textItem}>
         <Text style={styles.title}>{notification.title}</Text>

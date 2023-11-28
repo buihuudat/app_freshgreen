@@ -54,7 +54,7 @@ const Bill = () => {
   );
 
   const deliveryCost = useMemo(
-    () => (totalPrice > 50 ? 0 : 25000),
+    () => (totalPrice > 50000 ? 0 : 25000),
     [totalPrice],
   );
 

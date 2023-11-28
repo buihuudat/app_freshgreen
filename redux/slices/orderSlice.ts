@@ -30,7 +30,7 @@ export const orderSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(orderActions.getOrders.fulfilled, (state, action) => {
-        state.data = action.payload.orders;
+        if (action.payload?.orders) state.data = action.payload.orders;
       })
       .addCase(orderActions.createOrder.fulfilled, (state, action) => {
         state.data.push(action.payload);

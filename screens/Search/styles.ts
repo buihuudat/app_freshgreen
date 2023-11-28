@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
   },
 
   price: {
-    fontSize: 25,
+    fontSize: 16,
     color: mainColor,
     fontWeight: '600',
   },

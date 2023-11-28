@@ -5,12 +5,17 @@ import {RootState} from '../../../redux/store';
 import {UserImage} from '../../../constants/images';
 import {fullnameOfUser} from '../../../types/userType';
 
-const MessageItem = (props: {fromSelf: boolean; message: string}) => {
+const MessageItem = (props: {
+  AI: boolean;
+  fromSelf: boolean;
+  message: string;
+}) => {
   const sender = {
-    _id: '654367fa7a19c5bddd7a1edb',
-    fullname: 'Hỗ trợ',
-    avatar:
-      'https://e7.pngegg.com/pngimages/381/746/png-clipart-customer-service-technical-support-help-desk-customer-support-management-miscellaneous-service-thumbnail.png',
+    _id: props.AI ? 'AI' : '654367fa7a19c5bddd7a1edb',
+    fullname: props.AI ? 'AI' : 'Hỗ trợ',
+    avatar: props.AI
+      ? 'https://e7.pngegg.com/pngimages/312/145/png-clipart-chef-illustration-chef-cooking-cooking-kitchen-food-thumbnail.png'
+      : 'https://e7.pngegg.com/pngimages/381/746/png-clipart-customer-service-technical-support-help-desk-customer-support-management-miscellaneous-service-thumbnail.png',
   };
   const user = useAppSelector((state: RootState) => state.user.user);
 

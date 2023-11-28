@@ -7,7 +7,6 @@ export const orderActions = {
   getOrders: createAsyncThunk('/order/gets', async (userId: string) => {
     try {
       const res = await orderApi.getOrders(userId);
-      // await dataStorage.setItem('order', res.data.orders);
       return res.data;
     } catch (error) {
       throw error;

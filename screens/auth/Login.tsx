@@ -93,7 +93,7 @@ export default function Login() {
 
   const handleGoogleLogin = async () => {
     const data: any = await googleLogin();
-    await dispatch(authActions.facebook(data))
+    await dispatch(authActions.google(data))
       .unwrap()
       .then(() => {
         checkAuth(dispatch).then(() => {
@@ -113,7 +113,7 @@ export default function Login() {
 
   const handleFacebookLogin = async () => {
     const data: any = await facebookLogin();
-    await dispatch(authActions.google(data))
+    await dispatch(authActions.facebook(data))
       .unwrap()
       .then(() => {
         checkAuth(dispatch).then(() => {

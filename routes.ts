@@ -32,6 +32,7 @@ export type RootStackParamList = {
   Profile: undefined;
   Account: undefined;
   Payment: {payData: PayData; order: OrderItemType};
+  VNPAY: {payData: PayData; order: OrderItemType};
   OrderManager: undefined;
   History: undefined;
 

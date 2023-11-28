@@ -1,5 +1,5 @@
 import {ScrollView, StyleSheet, RefreshControl, View} from 'react-native';
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import HomeSwiper from './components/HomeSwiper';
 import HomeAds from './components/HomeAds';
 import HomeProducts from './components/HomeProducts';
@@ -38,6 +38,7 @@ export default function Home() {
         dispatch(productActions.ratedHighestProducts()),
         dispatch(productActions.getBiggestDiscountProducts()),
         dispatch(productActions.getProductsView()),
+        dispatch(productActions.popular()),
       ]);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -45,6 +46,10 @@ export default function Home() {
       setRefreshing(false);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleRefresh = useCallback(() => {
     fetchData();

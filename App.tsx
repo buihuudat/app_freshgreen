@@ -59,6 +59,7 @@ export default function App() {
         ios: lightColors.platform.ios,
       }),
     },
+    mode: 'light',
   });
 
   return (
