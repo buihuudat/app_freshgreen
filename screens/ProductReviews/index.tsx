@@ -24,17 +24,20 @@ import moment from 'moment';
 import {CommentType} from '../../types/commentType';
 import commentActions from '../../actions/commentActions';
 import ProductSkeleton from './components/ProductSkeleton';
+import Toast from 'react-native-toast-message';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ProductReviews'>;
 
 export default function ProductReviews({route, navigation}: Props) {
   const {productName, averageStarRating, productId} = route.params;
-  const user = useAppSelector((state: RootState) => state.user.user);
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state: RootState) => state.user.user);
+  const comments = useAppSelector(state => state.comment.comments);
+
   const [rate, setRate] = useState(5);
   const [loading, setLoading] = useState(true);
   const [commentSelected, setCommentSelected] = useState<string>('');
-  const comments = useAppSelector(state => state.comment.comments);
+  const [comment, setComment] = useState('');
 
   const fetchComments = async () => {
     await dispatch(commentActions.getProductComments(productId)).then(() =>
@@ -72,6 +75,26 @@ export default function ProductReviews({route, navigation}: Props) {
         reaction: isLiked(comment) ? 'Unlike' : 'Like',
       }),
     );
+  };
+
+  const handleComment = () => {
+    if (!user?._id) {
+      return Toast.show({
+        type: 'warning',
+        text1: 'Yêu cầu đăng nhập!',
+      });
+    }
+    dispatch(
+      commentActions.addComment({
+        userId: user?._id!,
+        productId,
+        content: comment,
+        commentId: comment._id!,
+        rate: Number(rate),
+      }),
+    );
+
+    setComment('');
   };
 
   return (
@@ -192,9 +215,15 @@ export default function ProductReviews({route, navigation}: Props) {
                           multiline
                           placeholder="Viết bình luận..."
                           numberOfLines={1}
+                          value={comment}
+                          onChangeText={setComment}
                           style={styles.input}
                         />
-                        <Icon name="send" color={mainColor} />
+                        <Icon
+                          name="send"
+                          color={mainColor}
+                          onPress={handleComment}
+                        />
                       </View>
                     </View>
                   </View>
