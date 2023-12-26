@@ -57,7 +57,9 @@ export const InitialUser: UserType = {
   following: [],
 };
 
-export const fullnameOfUser = ({firstname, lastname}: FullnameOfUser) => {
+export const fullnameOfUser = (fullname: FullnameOfUser) => {
+  const firstname = fullname?.firstname || '';
+  const lastname = fullname?.lastname || '';
   return `${firstname} ${lastname}`;
 };
 

@@ -91,6 +91,7 @@ export const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     gap: 10,
+    alignItems: 'center',
   },
 
   userAvatar: {
@@ -109,6 +110,7 @@ export const styles = StyleSheet.create({
   nameOfUser: {
     fontSize: 20,
     fontWeight: '600',
+    width: '55%',
   },
 
   userRate: {

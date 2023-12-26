@@ -15,6 +15,7 @@ import {toastConfig} from './components/toastConfig';
 import {getToken, pushNotification} from './utils/handlers/pushNotification';
 import 'react-native-gesture-handler';
 import 'moment/locale/vi';
+import {DefaultTheme, Provider as ProviderPaper} from 'react-native-paper';
 
 const LazyHome = lazy(() => import('./screens/Home'));
 const LazyProductDetails = lazy(() => import('./screens/ProductDetails'));
@@ -62,109 +63,119 @@ export default function App() {
     mode: 'light',
   });
 
+  const themePaper = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      secondaryContainer: 'transparent', // Use transparent to disable the little highlighting oval
+    },
+  };
+
   return (
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <SafeAreaProvider>
-          <NavigationContainer>
-            <Suspense fallback={<ActivityIndicator />}>
-              <RootStack.Navigator
-                initialRouteName="Splash"
-                screenOptions={{
-                  headerShown: false,
-                  // gestureEnabled: true,
-                  gestureDirection: 'horizontal',
-                  transitionSpec: {
-                    open: TransitionSpecs.TransitionIOSSpec,
-                    close: TransitionSpecs.TransitionIOSSpec,
-                  },
-                  cardStyleInterpolator: ({current, next, layouts}) => {
-                    return {
-                      cardStyle: {
-                        transform: [
-                          {
-                            translateX: current.progress.interpolate({
-                              inputRange: [0, 1],
-                              outputRange: [layouts.screen.width, 0],
-                            }),
-                          },
-                          {
-                            translateX: next
-                              ? next.progress.interpolate({
-                                  inputRange: [0, 1],
-                                  outputRange: [0, -layouts.screen.width],
-                                })
-                              : 0,
-                          },
-                        ],
-                      },
-                      overlayStyle: {
-                        opacity: current.progress.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [0, 0.5],
-                        }),
-                      },
-                    };
-                  },
-                }}>
-                <RootStack.Screen name="HomeTab" component={BottomTabs} />
-                <RootStack.Screen name="Splash" component={Splash} />
-                <RootStack.Screen name="Home" component={LazyHome} />
-                <RootStack.Screen
-                  name="ProductDetail"
-                  component={LazyProductDetails}
-                />
-                <RootStack.Screen
-                  name="ProductReviews"
-                  component={LazyProductReviews}
-                />
-                <RootStack.Screen
-                  name="StoreDetails"
-                  component={LazyStoreDetails}
-                />
-                <RootStack.Screen
-                  name="NewsDetails"
-                  component={LazyNewsDetails}
-                />
-                <RootStack.Screen
-                  name="Categories"
-                  component={LazyCategories}
-                />
-                <RootStack.Screen name="Search" component={LazySearch} />
-                <RootStack.Screen
-                  name="Notification"
-                  component={LazyNotification}
-                />
-                <RootStack.Screen name="Message" component={LazyMessage} />
-                <RootStack.Screen name="Chat" component={LazyChat} />
-                <RootStack.Screen name="FAQ" component={LazyFAQ} />
-                <RootStack.Screen name="Contact" component={LazyContact} />
-                <RootStack.Screen name="Settings" component={LazySettings} />
-                <RootStack.Screen name="Cart" component={LazyCart} />
-                <RootStack.Screen name="History" component={LazyHistory} />
-                <RootStack.Screen name="Favorite" component={LazyFavorite} />
-                <RootStack.Screen name="Profile" component={LazyProfile} />
-                <RootStack.Screen name="Payment" component={LazyPayment} />
-                <RootStack.Screen
-                  name="OrderManager"
-                  component={LazyOrderManager}
-                />
-                <RootStack.Screen name="Register" component={LazyRegister} />
-                <RootStack.Screen name="Login" component={LazyLogin} />
-                <RootStack.Screen
-                  name="ForgotPassword"
-                  component={LazyForgotPassword}
-                />
-                <RootStack.Screen
-                  name="LoginWithSMS"
-                  component={LazyLoginWithSMS}
-                />
-              </RootStack.Navigator>
-            </Suspense>
-          </NavigationContainer>
-          <Toast config={toastConfig} />
-        </SafeAreaProvider>
-      </ThemeProvider>
+      <ProviderPaper theme={themePaper}>
+        <ThemeProvider theme={theme}>
+          <SafeAreaProvider>
+            <NavigationContainer>
+              <Suspense fallback={<ActivityIndicator />}>
+                <RootStack.Navigator
+                  initialRouteName="Splash"
+                  screenOptions={{
+                    headerShown: false,
+                    // gestureEnabled: true,
+                    gestureDirection: 'horizontal',
+                    transitionSpec: {
+                      open: TransitionSpecs.TransitionIOSSpec,
+                      close: TransitionSpecs.TransitionIOSSpec,
+                    },
+                    cardStyleInterpolator: ({current, next, layouts}) => {
+                      return {
+                        cardStyle: {
+                          transform: [
+                            {
+                              translateX: current.progress.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [layouts.screen.width, 0],
+                              }),
+                            },
+                            {
+                              translateX: next
+                                ? next.progress.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: [0, -layouts.screen.width],
+                                  })
+                                : 0,
+                            },
+                          ],
+                        },
+                        overlayStyle: {
+                          opacity: current.progress.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [0, 0.5],
+                          }),
+                        },
+                      };
+                    },
+                  }}>
+                  <RootStack.Screen name="HomeTab" component={BottomTabs} />
+                  <RootStack.Screen name="Splash" component={Splash} />
+                  <RootStack.Screen name="Home" component={LazyHome} />
+                  <RootStack.Screen
+                    name="ProductDetail"
+                    component={LazyProductDetails}
+                  />
+                  <RootStack.Screen
+                    name="ProductReviews"
+                    component={LazyProductReviews}
+                  />
+                  <RootStack.Screen
+                    name="StoreDetails"
+                    component={LazyStoreDetails}
+                  />
+                  <RootStack.Screen
+                    name="NewsDetails"
+                    component={LazyNewsDetails}
+                  />
+                  <RootStack.Screen
+                    name="Categories"
+                    component={LazyCategories}
+                  />
+                  <RootStack.Screen name="Search" component={LazySearch} />
+                  <RootStack.Screen
+                    name="Notification"
+                    component={LazyNotification}
+                  />
+                  <RootStack.Screen name="Message" component={LazyMessage} />
+                  <RootStack.Screen name="Chat" component={LazyChat} />
+                  <RootStack.Screen name="FAQ" component={LazyFAQ} />
+                  <RootStack.Screen name="Contact" component={LazyContact} />
+                  <RootStack.Screen name="Settings" component={LazySettings} />
+                  <RootStack.Screen name="Cart" component={LazyCart} />
+                  <RootStack.Screen name="History" component={LazyHistory} />
+                  <RootStack.Screen name="Favorite" component={LazyFavorite} />
+                  <RootStack.Screen name="Profile" component={LazyProfile} />
+                  <RootStack.Screen name="Payment" component={LazyPayment} />
+                  <RootStack.Screen
+                    name="OrderManager"
+                    component={LazyOrderManager}
+                  />
+                  <RootStack.Screen name="Register" component={LazyRegister} />
+                  <RootStack.Screen name="Login" component={LazyLogin} />
+                  <RootStack.Screen
+                    name="ForgotPassword"
+                    component={LazyForgotPassword}
+                  />
+                  <RootStack.Screen
+                    name="LoginWithSMS"
+                    component={LazyLoginWithSMS}
+                  />
+                </RootStack.Navigator>
+              </Suspense>
+            </NavigationContainer>
+            <Toast config={toastConfig} />
+          </SafeAreaProvider>
+        </ThemeProvider>
+      </ProviderPaper>
     </Provider>
   );
 }

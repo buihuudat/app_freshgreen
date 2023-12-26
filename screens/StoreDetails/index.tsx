@@ -19,6 +19,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import Details from './components/Details';
 import Products from './components/Products';
 import {productActions} from '../../actions/productActions';
+import Toast from 'react-native-toast-message';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'StoreDetails'>;
 const Tab = createMaterialTopTabNavigator();
@@ -57,17 +58,19 @@ export default function StoreDetails({route, navigation}: Props) {
     setIsLoading(false);
   };
   const handleFollow = () => {
+    if (!user) return Toast.show({type: 'error', text1: 'Bạn chưa đăng nhập'});
     dispatch(shopActions.updateFollow({shopId: shop._id!, userId: user?._id!}));
   };
 
   const handleChat = () => {
-    navigation.navigate('Chat', {
-      from: {
-        _id: shop._id!,
-        avatar: shop.user?.avatar!,
-        fullname: shop.name,
-      },
-    });
+    // navigation.navigate('Chat', {
+    //   from: {
+    //     _id: shop._id!,
+    //     avatar: shop.user?.avatar!,
+    //     fullname: shop.name,
+    //   },
+    // });
+    Toast.show({type: 'warning', text1: 'Chức năng đang phát triển'});
   };
 
   return (

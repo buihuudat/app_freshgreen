@@ -1,7 +1,7 @@
 import {View, Text, FlatList, RefreshControl} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {Header, Icon, LinearProgress} from '@rneui/themed';
+import {Header, Icon} from '@rneui/themed';
 import {mainColor} from '../../constants/colors';
 import moment from 'moment';
 import {styles} from './styles';
@@ -81,7 +81,7 @@ export default function News() {
         backgroundColor="transparent"
       />
 
-      {isLoading && <LinearProgress />}
+      {isLoading && <ActivityIndicator />}
 
       <FlatList
         data={tags}

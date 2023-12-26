@@ -248,14 +248,18 @@ export default function ProductReviews({route, navigation}: Props) {
                     <View style={styles.userView}>
                       <Image
                         style={styles.userAvatar}
-                        source={user?.avatar ? {uri: user?.avatar!} : UserImage}
+                        source={
+                          comment.auth?.avatar
+                            ? {uri: comment.auth?.avatar!}
+                            : UserImage
+                        }
                       />
 
                       <View style={styles.viewComment}>
                         <View style={styles.userLike}>
                           <View style={styles.userRate}>
                             <Text style={styles.nameOfUser}>
-                              {fullnameOfUser(user?.fullname!)}
+                              {fullnameOfUser(comment.auth?.fullname!)}
                             </Text>
                             <Text>
                               {moment(comment.updatedAt).endOf('day').fromNow()}
